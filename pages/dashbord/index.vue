@@ -2,9 +2,10 @@
   section.section
 
     section
-      .first-view#fv ログインしていない時のトップ
-      button(@click="googleLogin") Googleログイン
-      nuxt-link(to="dashbord") ダッシュボードへ
+      .test ログインした時のページ
+      button(@click="logOut") ログアウト
+      nuxt-link(to="/") トップへ
+      p {{$store.state.user.email}}
 
 </template>
 
@@ -51,16 +52,6 @@ export default {
 
   },
 
-  created: function(){
-    firebase.auth().onAuthStateChanged((user)=> {
-      if (user) {
-        this.setUser(user)
-        this.$router.push('/dashbord')
-      }
-    })
-
-  },
-
   mounted: function(){
 
   },
@@ -70,17 +61,20 @@ export default {
   },
 
   methods: {
+
     ...mapActions(['setUser']),
 
-    googleLogin () {
-      const provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithRedirect(provider)
-      .then(user => {
-        this.$router.push('/dashbord')
+    //ログアウト
+    logOut(){
+      firebase.auth().signOut()
+      .then(() => {
+        this.setUser(null)
+        this.$router.push('/?flash=logout')
       }).catch((error) => {
         alert(error)
-      });
+      })
     },
+
   }
 }
 </script>
