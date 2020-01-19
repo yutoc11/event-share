@@ -19,7 +19,8 @@
     "nuxt-sass-resources-loader": "^2.0.5",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
-    "sass-loader": "^8.0.2"
+    "sass-loader": "^8.0.2",
+    "vuex-persistedstate": "^2.7.0"
   },
   "devDependencies": {}
 }
