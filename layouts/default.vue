@@ -1,8 +1,12 @@
 <template lang="pug">
   .event-share
     header.bg-color
-      .center-text
-        p Googleログイン
+      .header-menu
+        .header-logo
+          img(src="~/assets/images/logo.png")
+        .header-login
+           .header-login-button(@click="googleLogin")
+      .header-line
 
     section
       nuxt/
@@ -11,6 +15,34 @@
       .center-text
         p ©2019 event-share.
 </template>
+<script>
+import firebase from '@/plugins/firebase'
+import store from '~/store/index.js'
+import { mapActions, mapState, mapGetters } from 'vuex'
+
+export default {
+
+  computed:{
+    ...mapState(['user']),
+  },
+
+  methods: {
+    ...mapActions(['setUser']),
+
+    googleLogin () {
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithRedirect(provider)
+      .then(user => {
+        this.setUser(user)
+        console.log(this.$store.state.user);
+        this.$router.push('/dashbord')
+      }).catch((error) => {
+        alert(error)
+      });
+    },
+  }
+}
+</script>
 
 <style lang="scss">
 html {
@@ -33,7 +65,7 @@ html {
 }
 
 .bg-color{
-  background-color: #EEE8DD;
+  background-color: #fff;
 }
 
 .center-text{
@@ -41,8 +73,51 @@ html {
 }
 
 header{
-  height: 48px;
+  height: 50px;
   line-height: 48px;
+  .header-line{
+    height: 2px;
+    background-color: #E7EBEF;
+  }
+}
+
+.header-menu{
+  display: flex;
+  justify-content: space-between;
+  height: 48px;
+
+  .header-logo{
+
+    padding-top: 5px;
+
+    img{
+      height: 40px;
+    }
+  }
+
+  .header-login{
+
+    padding: 2px 6px 0 0;
+    height: 48px;
+
+    .header-login-button{
+      background-image: url("../assets/images/btn_google_signin_light_normal_web.png");
+      height: 45px;
+      width: 190px;
+      background-size: cover;
+    }
+
+    .header-login-button:hover{
+      cursor: pointer;
+      background-image: url("../assets/images/btn_google_signin_light_focus_web.png");
+    }
+  }
+
+}
+
+
+section{
+  background-color: #F9FBFE;
 }
 
 footer{

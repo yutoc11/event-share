@@ -1,7 +1,7 @@
 <template lang="pug">
   section.section
 
-    section
+    section.center-text
       .first-view#fv ログインしていない時のトップ
       button(@click="googleLogin") Googleログイン
       nuxt-link(to="dashbord") ダッシュボードへ
@@ -55,6 +55,7 @@ export default {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         this.setUser(user)
+        console.log(this.$store.state.user);
         this.$router.push('/dashbord')
       }
     })
@@ -76,6 +77,8 @@ export default {
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithRedirect(provider)
       .then(user => {
+        this.setUser(user)
+        console.log(this.$store.state.user);
         this.$router.push('/dashbord')
       }).catch((error) => {
         alert(error)
@@ -90,6 +93,8 @@ export default {
 .modal-body {
   overflow-y: hidden;
 }
+
+
 
 @media screen and (max-width: 780px) {
 
