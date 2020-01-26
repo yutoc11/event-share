@@ -1,19 +1,20 @@
 <template lang="pug">
-  .event-share
-    header.bg-color
-      .header-menu
-        .header-logo
-          img(src="~/assets/images/logo.png")
-        .header-login
-           .header-login-button(@click="googleLogin")
-      .header-line
+  v-app.app
+    .event-share
+      header.hf-bg-color
+        .header-menu
+          .header-logo
+            img(src="~/assets/images/logo.png")
+          .header-login
+             .login-button(@click="googleLogin")
+        .header-line
 
-    section
-      nuxt/
+      section
+        nuxt/
 
-    footer.bg-color
-      .center-text
-        p ©2019 event-share.
+      footer.hf-bg-color
+        .center-text
+          p.footer-text ©2019 event-share.
 </template>
 <script>
 import firebase from '@/plugins/firebase'
@@ -24,6 +25,7 @@ export default {
 
   computed:{
     ...mapState(['user']),
+    ...mapGetters(['isAuthenticated']),
   },
 
   methods: {
@@ -65,11 +67,37 @@ html {
 }
 
 .bg-color{
+  background-color: #F9DBDB;
+}
+
+.hf-bg-color{
   background-color: #fff;
 }
 
 .center-text{
   text-align: center;
+}
+
+.align-center{
+  margin: 0 auto;
+}
+
+.event-share{
+
+}
+
+.event-container{
+  max-width: 620px;
+  margin: 0 auto;
+  padding:12px 12px 50px;
+  text-align: center;
+  background-color: transparent;
+}
+
+.v-window__container,
+.v-window.v-item-group.v-tabs-items,
+.v-window-item.event-container{
+  background-color: #F9FBFE;
 }
 
 header{
@@ -79,6 +107,21 @@ header{
     height: 2px;
     background-color: #E7EBEF;
   }
+}
+.v-btn__content{
+  color: #16325c;
+}
+
+.login-button{
+  background-image: url("../assets/images/btn_google_signin_light_normal_web.png");
+  height: 45px;
+  width: 190px;
+  background-size: cover;
+}
+
+.login-button:hover{
+  cursor: pointer;
+  background-image: url("../assets/images/btn_google_signin_light_focus_web.png");
 }
 
 .header-menu{
@@ -99,18 +142,6 @@ header{
 
     padding: 2px 6px 0 0;
     height: 48px;
-
-    .header-login-button{
-      background-image: url("../assets/images/btn_google_signin_light_normal_web.png");
-      height: 45px;
-      width: 190px;
-      background-size: cover;
-    }
-
-    .header-login-button:hover{
-      cursor: pointer;
-      background-image: url("../assets/images/btn_google_signin_light_focus_web.png");
-    }
   }
 
 }
@@ -121,7 +152,11 @@ section{
 }
 
 footer{
-  padding: 40px 0;
+  padding: 18px 0;
+  line-height: 18px;
   background-color: rgba(255,255,255,0);
+  p.footer-text{
+    margin-bottom: 0;
+  }
 }
 </style>

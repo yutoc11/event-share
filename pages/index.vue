@@ -3,7 +3,7 @@
 
     section.center-text
       .first-view#fv ログインしていない時のトップ
-      button(@click="googleLogin") Googleログイン
+      .login-button.align-center(@click="googleLogin")
       nuxt-link(to="dashbord") ダッシュボードへ
 
 </template>
@@ -48,6 +48,7 @@ export default {
   computed:{
     //...mapState(['fashions']),
     ...mapState(['user']),
+    ...mapGetters(['isAuthenticated']),
 
   },
 

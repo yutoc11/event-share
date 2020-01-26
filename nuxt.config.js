@@ -28,12 +28,14 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: "~plugins/persistedstate.js", ssr: false }
+    { src: "~plugins/persistedstate.js", ssr: false },
+    '~plugins/vuetify.js',
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    '@nuxtjs/vuetify',
   ],
   /*
   ** Nuxt.js modules
@@ -42,6 +44,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
   ],
+
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
