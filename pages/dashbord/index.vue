@@ -1,7 +1,7 @@
 <template lang="pug">
   section.event-container
 
-    section.your-url-wrapper
+    section.your-url-wrapper.underline-link
       .your-url
         p あなたのURL：eventlinks.net/_o_s_a_o_
       .confirm-your-url
@@ -26,21 +26,21 @@
 
         v-tab-item.event-container
           .myevent-tab-wrapper
-            .myevent-add-wrapper(@click="openModal()") イベントの予定を追加する
+            .myevent-add-wrapper.event-share-button(@click="openModal()") イベントの予定を追加する
+            .myevent-divider
             .myevent-wrapper
-              .myevent-all-delete-wrapper 過去のイベントを全て削除する
+              .myevent-all-delete-wrapper.underline-link 過去のイベントを全て削除する
               .myevent-list-wrapper
-                .myevent-wrapper
-                  .division
-                  .myevent-content-wrapper
-                    .date 2020.4.20 (火)
-                    .event-title 横浜ハンドメイドマルシェ2020春
-                    .position A-8
-                    .booth-name osao handmade
-                    .oficial-link 公式HPでみる
+                .myevent-content-wrapper
+                  p.division 神奈川県
+                  p.date 2020.4.20 (火)
+                  h3.event-title 横浜ハンドメイドマルシェ2020春
+                  p.position A-8
+                  p.booth-name osao handmade
+                  p.oficial-link.underline-link 公式HPでみる
                   .edit-wrapper
-                    .delete 削除
-                    .edit 編集
+                    .delete.underline-link 削除
+                    .edit.underline-link 編集
 
         v-tab-item.event-container
           .logout
@@ -148,12 +148,8 @@ export default {
   margin-bottom: 10px;
 
   .confirm-your-url{
-    font-size: 0.8rem;
-    text-decoration: underline;
   }
   .confirm-your-url:hover{
-    cursor: pointer;
-    opacity: 0.7;
   }
 }
 
@@ -162,12 +158,139 @@ export default {
   overflow: scroll;
 }
 
+.event-container{
+
+  .myevent-tab-wrapper{
+
+    .myevent-add-wrapper{
+
+
+    }
+
+    .myevent-divider{
+      width: 100%;
+      border-bottom: solid 2px #E7EBEF;
+      margin: 10px 0;
+    }
+
+    .myevent-wrapper{
+      .myevent-all-delete-wrapper{
+        text-align: right;
+        padding: 0 0 10px 0;
+      }
+      .myevent-list-wrapper{
+          .myevent-content-wrapper{
+
+            padding: 10px;
+            border-radius: 15px;
+            border: 3px solid #F9DBDB;
+            background: #fff;
+            p{
+              margin-bottom: 4px;
+            }
+
+            .division{
+              padding-left: 10px;
+              text-align: left;
+              font-size: 0.8rem;
+            }
+
+            .date{
+              font-size: 0.8rem;
+            }
+            .event-title{
+              font-size: 0.95rem;
+            }
+            .position{
+              font-size: 0.8rem;
+              margin-bottom: 2px;
+              line-height: 0.8rem;
+            }
+            .booth-name{
+              font-size: 0.8rem;
+              line-height: 0.8rem;
+            }
+            .oficial-link{
+              font-size: 0.8rem;
+            }
+            .edit-wrapper{
+
+              display: flex;
+              justify-content: space-between;
+              padding: 0 10px;
+
+              .delete{
+
+              }
+              .edit{
+
+              }
+            }
+          }
+
+
+      }
+    }
+
+  }
+
+}
+
 @media screen and (max-width: 780px) {
 
 }
 
 @media screen and (max-width: 480px) {
+  .event-container{
 
+    .myevent-tab-wrapper{
+
+      .myevent-add-wrapper{
+
+      }
+
+      .myevent-wrapper{
+        .myevent-all-delete-wrapper{
+
+        }
+        .myevent-list-wrapper{
+          .myevent-wrapper{
+
+          }
+            .division{
+
+            }
+            .myevent-content-wrapper{
+              .date{
+
+              }
+              .event-title{
+              }
+              .position{
+
+              }
+              .booth-name{
+
+              }
+              .oficial-link{
+
+              }
+            }
+            .edit-wrapper{
+              .delete{
+
+              }
+              .edit{
+
+              }
+            }
+
+        }
+      }
+
+    }
+
+  }
 }
 
 

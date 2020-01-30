@@ -57,6 +57,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  color: #565656;
 }
 
 *,
@@ -64,6 +65,15 @@ html {
 *:after {
   box-sizing: border-box;
   margin: 0;
+}
+
+h3{
+  font-weight: normal;
+  color: #565656;
+}
+
+p{
+  color: #565656;
 }
 
 .bg-color{
@@ -84,6 +94,28 @@ html {
 
 .event-share{
 
+}
+
+.event-share-button{
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background-color: #F9DBDB;
+}
+
+.event-share-button:hover{
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.underline-link{
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+.underline-link:hover{
+  cursor: pointer;
+  opacity: 0.7;
 }
 
 .event-container{
@@ -114,9 +146,9 @@ header{
 
 .login-button{
   background-image: url("../assets/images/btn_google_signin_light_normal_web.png");
-  height: 45px;
-  width: 190px;
-  background-size: cover;
+  height: 36px;
+  width: 150px;
+  background-size: contain;
 }
 
 .login-button:hover{
@@ -139,7 +171,9 @@ header{
   }
 
   .header-login{
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2px 6px 0 0;
     height: 48px;
   }

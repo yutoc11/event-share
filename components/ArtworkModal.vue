@@ -4,18 +4,45 @@ transition(name="modal")
     .modal-wrapper
         .modal-container
           .modal-content-wrapper
-            .modal-title
-              h3 新規のイベントを追加する
-            .modal-date-wrapper
-              .date-label
-              .date-input-wrapper
-                .date-start 2020-4-1
-                .date-span 〜
-                .date-end 2020-4-3
-            .modal-content-title
-              h3 へいへい
-            .modal-content-caption
-              p ういうい
+            .contact-wrapper
+              .form-wrapper
+                .modal-title
+                  h3 新規のイベントを追加する
+                .modal-date-wrapper
+                  .date-label.input-label 日にち：必須
+                  .date-input-wrapper
+                    .date-start-wrapper
+                      input.date-start.input-area(type="text" placeholder="2020-4-1")
+                    .date-span 〜
+                    .date-end-wrapper
+                      input.date-end.input-area(type="text" placeholder="2020-4-3")
+                .modal-addevent-wrapper
+                  validation-observer(v-slot="{ invalid }")
+                    .event-title-wrapper.event-contents-wrapper
+                      .input-label イベント名：必須
+                      validation-provider(v-slot="{ errors }" rules="required" name="イベント名")
+                        input(v-model="formData.eventTitle" type="text" name="EventTitle" placeholder="ハンドメイドマルシェ" required="required" autocomplete="off").input-area
+                        .error-ms-wrapper
+                          p(v-show="errors.length" class="help is-danger") {{ errors[0] }}
+                    .event-title-wrapper.event-contents-wrapper
+                      .input-label 場所（ブース番号など）：任意
+                        input(v-model="formData.booth" type="text" name="Booth" placeholder="A-18" autocomplete="off").input-area
+                        .error-ms-wrapper
+                    .event-shoptitle-wrapper.event-contents-wrapper
+                      .input-label ショップ名：任意
+                        input(v-model="formData.shopName" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
+                        .error-ms-wrapper
+                    .event-comment-wrapper.event-contents-wrapper
+                      .input-label コメント：任意
+                      validation-provider(v-slot="{ errors }" rules="max:1000" name="コメント")
+                        textarea(v-model="formData.content" cols="50" rows="4" name="Comment" placeholder="補足事項があればご記入ください。").input-area
+                        .error-ms-wrapper
+                          p(v-show="errors.length" class="help is-danger") {{ errors[0] }}
+                    .contact-button-wrapper
+                      .osao-button.disabled-button(v-if="invalid") イベントを追加
+                      .osao-button.contact-button(v-else @click="sendContact()") イベントを追加
+                      .error-ms-wrapper
+                        p.caption(v-show="invalid" class="help") ※必須項目を入力してください。
         .close-link-wrapper
           .close-link(@click="closeModal()") とじる
 </template>
@@ -29,6 +56,16 @@ export default {
   props:[
     'val'
   ],
+
+  data(){
+    return{
+      formData: {
+        name: '',
+        email: '',
+        content: '',
+      }
+    };
+  },
 
   computed:{
   },
@@ -102,8 +139,7 @@ export default {
      overflow-y: scroll;
      width: 35%;
      min-width: 300px;
-     min-height: 400px;
-     height:75vh;
+     height:85vh;
      margin: 0px auto;
      padding: 40px 10px;
      background-color: #fff;
@@ -121,14 +157,17 @@ export default {
        justify-content: center;
        text-align: center;
 
-       .date-span{
-          transform: rotate(90deg);
+       .modal-title{
+
+         margin-bottom: 6px;
+         h3{
+           font-size: 1rem;
+           text-align: center;
+         }
        }
 
        .contact-wrapper{
          max-width: 1024px;
-         padding: 48px 0;
-         margin: 0 auto;
          text-align: center;
 
          .contact-description{
@@ -147,9 +186,11 @@ export default {
          }
 
          .error-ms-wrapper{
-           min-height: 20px;
-         }.error-ms-wrapper{
-           min-height: 20px;
+           min-height: 16px;
+           p{
+             margin-bottom: 0;
+             font-size: 0.7rem;
+           }
          }
 
          .form-wrapper{
@@ -157,10 +198,34 @@ export default {
            width:100%;
            margin: 0 auto;
            text-align: left;
-           padding: 30px 0;
 
-           .contact-contents-wrapper{
-             margin-bottom: 30px;
+           .date-span{
+              transform: rotate(90deg);
+              width: 20px;
+              height: 20px;
+              margin: 0 auto;
+              color: #B3B6BB;
+           }
+
+           .modal-date-wrapper{
+             .date-label{
+               text-align: left;
+               font-size: 0.8rem;
+             }
+             .date-input-wrapper{
+
+               margin-bottom: 16px;
+               .date-start,
+               .date-end{
+                 width: 100%;
+                 padding: 4px 10px;
+                 font-size: 0.8rem;
+               }
+             }
+           }
+
+           .event-contents-wrapper{
+             margin-bottom: 6px;
            }
            input,
            textarea{
@@ -169,12 +234,14 @@ export default {
 
            .input-label{
              margin-bottom: 5px;
+             color: #565656;
+             font-size: 0.8rem;
            }
 
            .input-area{
-             padding: 10px 16px;
+             padding: 4px 10px;
              margin-bottom: 4px;
-             font-size: 1rem;
+             font-size: 0.8rem;
              border-radius: 4px;
              background: #FFFFFF;
              color: #787C7B;
