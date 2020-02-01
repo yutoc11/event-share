@@ -2,9 +2,9 @@
   section.event-container
 
     section.your-url-wrapper
-      .your-url あなたのURL：https://event-share.net/{{ username }}
-      .confirm-your-url.underline-link
-        p 自分のページを確認する
+      .your-url あなたのURL：https://event-share.net/{{ userFormData.username }}
+      .confirm-your-url
+        a.underline-link(:href="'https://event-share.net/'+ userFormData.username") 自分のページを確認する
 
     section.setting-wrapper
       v-tabs(v-model="tab" background-color="transparent" color="#F0858C" grow)
@@ -25,12 +25,14 @@
               .icon-upload-wrapper.upload-wrapper
                 i.material-icons.upload-icon attachment
                 input.input-file(type="file")
+              user-icon
 
             .cover-image-wrapper.account-item-wrapper
               .cover-image.input-label カバー画像設定
               .cover-upload-wrapper.upload-wrapper
                 i.material-icons.upload-icon attachment
                 input.input-file(type="file")
+              user-cover
 
             .save-button-wrapper
               .common-button.disabled-button(v-if="invalid") ユーザー情報を更新
@@ -53,6 +55,8 @@
                   .edit-wrapper
                     .delete.underline-link 削除
                     .edit.underline-link 編集
+                .no-event-wrapper
+                  p.no-ivent まだイベントが登録されていません。
 
         v-tab-item.event-container
           .logout
@@ -73,6 +77,8 @@ import firebase from '@/plugins/firebase'
 import store from '~/store/index.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import ArtworkModal from '~/components/ArtworkModal.vue'
+import UserIcon from '~/components/UserIcon.vue'
+import UserCover from '~/components/UserCover.vue'
 
 export default {
   //layout: 'home',
@@ -87,6 +93,7 @@ export default {
 
   data(){
     return{
+      myEventUrl: "",
       tab: null,
       showModal: false,
       postItem: '',
@@ -110,14 +117,19 @@ export default {
     ...mapState(['user']),
     ...mapGetters(['isAuthenticated']),
 
+    myEventUrl: function () {
+        return 'https://event-share.net/' + this.username
+    }
+
   },
 
   mounted: function(){
-
   },
 
   components: {
     ArtworkModal,
+    UserIcon,
+    UserCover,
   },
 
   methods: {
@@ -263,6 +275,11 @@ export default {
 
               }
             }
+          }
+
+          .no-event-wrapper{
+            padding: 16px 0;
+            margin: 0 auto;
           }
 
 

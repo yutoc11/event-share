@@ -109,9 +109,13 @@ p{
   opacity: 0.7;
 }
 
+a{
+  color: #565656!important;
+}
 .underline-link{
   font-size: 0.8rem;
   text-decoration: underline;
+  color: #565656;
 }
 
 .underline-link:hover{
