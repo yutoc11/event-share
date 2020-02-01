@@ -3,8 +3,11 @@
 
     section.your-url-wrapper
       .your-url あなたのURL：https://event-share.net/{{ userFormData.username }}
-      .confirm-your-url
-        a.underline-link(:href="'https://event-share.net/'+ userFormData.username") 自分のページを確認する
+      .confirm-wrapper
+        .confirm-your-url
+          a.underline-link(:href="'https://event-share.net/'+ userFormData.username") 自分のページを確認する
+        .copy-your-url(@click="copyMyUrl")
+          v-icon(small) file_copy
 
     section.setting-wrapper
       v-tabs(v-model="tab" background-color="transparent" color="#F0858C" grow)
@@ -93,7 +96,7 @@ export default {
 
   data(){
     return{
-      myEventUrl: "",
+      myUrl: "",
       tab: null,
       showModal: false,
       postItem: '',
@@ -117,7 +120,7 @@ export default {
     ...mapState(['user']),
     ...mapGetters(['isAuthenticated']),
 
-    myEventUrl: function () {
+    myUrl: function () {
         return 'https://event-share.net/' + this.username
     }
 
@@ -138,6 +141,16 @@ export default {
 
     openModal(artwork) {
       this.showModal = true;
+    },
+
+    copyMyUrl() {
+      const myEventUrl = 'https://event-share.net/'+ this.userFormData.username
+
+      this.$copyText(myEventUrl)
+      console.log(myEventUrl)
+      //this.$parent.flash_message = "コピーしました"
+      //setTimeout(this.clearMessage,3000)
+
     },
 
     //ログアウト
@@ -165,13 +178,38 @@ export default {
 .your-url-wrapper{
   text-align: center;
   background-color: #fff;
-  padding: 20px 0 12px;
+  padding: 12px 0;
   border-radius: 10px;
   margin-bottom: 10px;
 
-  .confirm-your-url{
+  .your-url{
+    font-size: 0.8rem;
   }
-  .confirm-your-url:hover{
+
+  .confirm-wrapper{
+    margin-top: 4px;
+    display: flex;
+    justify-content: center;
+    .confirm-your-url{
+      line-height: 30px;
+    }
+    .confirm-your-url:hover{
+    }
+    .copy-your-url{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left:10px;
+      background-color: #f5f5f5;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+    .copy-your-url:hover{
+      opacity: 0.7;
+      cursor: pointer;
+    }
+
   }
 }
 

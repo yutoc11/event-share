@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "clipboard": "^2.0.4",
     "css-loader": "^3.4.2",
     "dayjs": "^1.8.19",
     "firebase": "^7.7.0",
     "node-sass": "^4.13.1",
     "nuxt": "^2.0.0",
+    "nuxt-clipboard2": "^0.2.1",
     "nuxt-sass-resources-loader": "^2.0.5",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
