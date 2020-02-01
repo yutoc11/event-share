@@ -8,14 +8,20 @@ transition(name="modal")
               .form-wrapper
                 .modal-title
                   h3 新規のイベントを追加する
+
                 .modal-date-wrapper
                   .date-label.input-label 日にち：必須
-                  .date-input-wrapper
-                    .date-start-wrapper
-                      input.date-start.input-area(type="text" placeholder="2020-4-1")
-                    .date-span 〜
-                    .date-end-wrapper
-                      input.date-end.input-area(type="text" placeholder="2020-4-3")
+                  .modal-datepicker-wrapper
+                    v-date-picker(
+                      v-model="formData.eventDates"
+                      full-width
+                      range
+                      no-title="true"
+                      color="#F0858C"
+                    )
+                  .date-display-wrapper
+                    p {{ dateRangeText }}
+
                 .modal-addevent-wrapper
                   validation-observer(v-slot="{ invalid }")
                     .event-title-wrapper.event-contents-wrapper
@@ -32,10 +38,14 @@ transition(name="modal")
                       .input-label ショップ名：任意
                         input(v-model="formData.shopName" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
                         .error-ms-wrapper
+                    .event-officialhp-wrapper.event-contents-wrapper
+                      .input-label イベント公式HP：任意
+                        input(v-model="formData.eventURL" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
+                        .error-ms-wrapper
                     .event-comment-wrapper.event-contents-wrapper
                       .input-label コメント：任意
                       validation-provider(v-slot="{ errors }" rules="max:1000" name="コメント")
-                        textarea(v-model="formData.content" cols="50" rows="4" name="Comment" placeholder="補足事項があればご記入ください。").input-area
+                        textarea(v-model="formData.comment" cols="50" rows="4" name="Comment" placeholder="補足事項があればご記入ください。").input-area
                         .error-ms-wrapper
                           p(v-show="errors.length" class="help is-danger") {{ errors[0] }}
                     .save-button-wrapper
@@ -59,15 +69,25 @@ export default {
 
   data(){
     return{
+
       formData: {
-        name: '',
-        email: '',
-        content: '',
+        eventTitle: '',
+        booth: '',
+        shopNameshopName: '',
+        eventURL: '',
+        comment: '',
+        eventDates: [''],
       }
     };
   },
 
   computed:{
+
+    dateRangeText () {
+        return this.formData.eventDates.join(' ~ ')
+      },
+
+
   },
 
   methods: {
@@ -212,14 +232,20 @@ export default {
                text-align: left;
                font-size: 0.8rem;
              }
-             .date-input-wrapper{
 
-               margin-bottom: 16px;
-               .date-start,
-               .date-end{
-                 width: 100%;
-                 padding: 4px 10px;
-                 font-size: 0.8rem;
+             .modal-datepicker-wrapper{
+               padding: 3px 10px 5px;
+
+             }
+             .date-display-wrapper{
+
+               min-height: 20px;
+               margin-bottom: 10px;
+
+               p{
+                 margin-bottom: 0;
+                 font-size: 0.85rem;
+                 text-align: center;
                }
              }
            }
