@@ -1,10 +1,9 @@
 <template lang="pug">
   section.event-container
 
-    section.your-url-wrapper.underline-link
-      .your-url
-        p あなたのURL：eventlinks.net/_o_s_a_o_
-      .confirm-your-url
+    section.your-url-wrapper
+      .your-url あなたのURL：https://event-share.net/{{ username }}
+      .confirm-your-url.underline-link
         p 自分のページを確認する
 
     section.setting-wrapper
@@ -16,13 +15,26 @@
       v-tabs-items.event-tab-container(v-model="tab")
 
         v-tab-item.event-container
-          .event-tab-wrapper
-            .user-name-wrapper
-              .user-name ユーザー名
-            .icon-wrapper
-              .icon アイコン設定
-            .cover-image-wrapper
-              .cover-image カバー画像設定
+          .account-tab-wrapper
+            .user-name-wrapper.account-item-wrapper
+              .user-name.input-label ユーザー名
+              input(v-model="userFormData.username" type="text" name="username" placeholder="_o_s_a_o_" required="required" autocomplete="off").input-area
+
+            .icon-wrapper.account-item-wrapper
+              .icon.input-label アイコン設定
+              .icon-upload-wrapper.upload-wrapper
+                i.material-icons.upload-icon attachment
+                input.input-file(type="file")
+
+            .cover-image-wrapper.account-item-wrapper
+              .cover-image.input-label カバー画像設定
+              .cover-upload-wrapper.upload-wrapper
+                i.material-icons.upload-icon attachment
+                input.input-file(type="file")
+
+            .save-button-wrapper
+              .common-button.disabled-button(v-if="invalid") ユーザー情報を更新
+              .common-button.save-button(v-else) ユーザー情報を更新
 
         v-tab-item.event-container
           .myevent-tab-wrapper
@@ -45,7 +57,7 @@
         v-tab-item.event-container
           .logout
             v-btn.simple-button(@click="logOut" color="#fff") ログアウト
-          .unsubscribe 退会する
+          .unsubscribe.underline-link 退会する
 
     section.test
       nuxt-link(to="/") トップへ
@@ -78,10 +90,8 @@ export default {
       tab: null,
       showModal: false,
       postItem: '',
-      formData: {
-        name: '',
-        email: '',
-        content: '',
+      userFormData: {
+        username: '',
       },
     };
   },
@@ -160,6 +170,33 @@ export default {
 
 .event-container{
 
+  .account-tab-wrapper{
+
+    text-align: left;
+
+    .account-item-wrapper{
+      margin-bottom: 10px;
+    }
+
+    .user-name-wrapper{
+        .user-name{
+
+        }
+    }
+    .icon-wrapper{
+      .icon{
+
+      }
+    }
+
+    .cover-image-wrapper{
+      .cover-image{
+
+      }
+    }
+
+  }
+
   .myevent-tab-wrapper{
 
     .myevent-add-wrapper{
@@ -235,6 +272,36 @@ export default {
   }
 
 }
+
+.upload-wrapper{
+  position: relative;
+  margin: 10px auto;
+  border: 2px dotted #F0858C;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  input.input-file{
+    opacity: 0;
+    width: 40px;
+    height: 40px;
+  }
+
+}
+
+.upload-icon{
+  position: absolute;
+  top: 6px;
+  left: 6.5px;
+  width: 40px;
+  height: 40px;
+  color: #F0858C;
+}
+
+.logout{
+  margin: 5px 0;
+}
+
 
 @media screen and (max-width: 780px) {
 

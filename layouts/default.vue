@@ -101,6 +101,7 @@ p{
   padding: 10px 15px;
   border-radius: 10px;
   background-color: #F9DBDB;
+  color: #565656;
 }
 
 .event-share-button:hover{
@@ -178,6 +179,78 @@ header{
     height: 48px;
   }
 
+}
+
+input,
+textarea{
+  width: 100%;
+}
+
+.input-label{
+  margin-bottom: 5px;
+  color: #565656;
+  font-size: 0.8rem;
+}
+
+.input-area{
+  padding: 4px 10px;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  background: #FFFFFF;
+  color: #787C7B;
+  letter-spacing: 0rem;
+  line-height: 1.4;
+  opacity: 1;
+  pointer-events: all;
+  background-clip: border-box;
+  border: solid 0.5px #B3B6BB;
+  transition: .3s cubic-bezier(.4,.4,0,1);
+}
+
+input,
+textarea{
+  border: solid 0.5px #B3B6BB;
+}
+
+input:focus,
+textarea:focus{
+  border: solid 0.5px #B3B6BB;
+  outline: 0;
+}
+
+
+
+
+.common-button{
+  background-color: #F9DBDB;
+  min-width:250px;
+  width: 50%;
+  padding: 8px 6px;
+  border-radius: 6px;
+  margin: 16px auto;
+  text-align: center;
+  color: #565656;
+}
+
+.common-button:hover{
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.save-button{
+
+}
+
+.disabled-button{
+  background-color: #EEEEEE;
+  color: #ccc;
+}
+
+
+.save-button:hover{
+  cursor: pointer;
+  opacity: 0.7;
 }
 
 
