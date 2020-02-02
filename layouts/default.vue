@@ -185,11 +185,6 @@ header{
 
 }
 
-input,
-textarea{
-  width: 100%;
-}
-
 .input-label{
   margin-bottom: 5px;
   color: #565656;
@@ -215,12 +210,17 @@ textarea{
 input,
 textarea{
   border: solid 0.5px #B3B6BB;
+  width: 100%;
 }
 
 input:focus,
 textarea:focus{
   border: solid 0.5px #B3B6BB;
   outline: 0;
+}
+
+::placeholder{
+  color: #cdd;
 }
 
 
