@@ -25,21 +25,32 @@
 
             .icon-wrapper.account-item-wrapper
               .icon.input-label アイコン設定
-              .icon-upload-wrapper.upload-wrapper
-                i.material-icons.upload-icon attachment
-                input.input-file(type="file")
-              user-icon
+
+              .icon-change-wrapper(v-if="iconImage")
+                user-icon(:iconImage="iconImage" v-on:iconChange="iconChange")
+                .change-button-wrapper
+                  .change-button.underline-link(v-if="iconPreviewImage" @click="fileUpload") 変更する
+              .icon-unsetting-wrapper(v-else)
+                .icon-upload-wrapper.upload-wrapper
+                  i.material-icons.upload-icon photo_camera
+                  input.input-file(@change="iconChange($event)" type="file")
+
 
             .cover-image-wrapper.account-item-wrapper
               .cover-image.input-label カバー画像設定
               .cover-upload-wrapper.upload-wrapper
-                i.material-icons.upload-icon attachment
+                i.material-icons.upload-icon photo_camera
                 input.input-file(type="file")
               user-cover
 
             .save-button-wrapper
               .common-button.disabled-button(v-if="invalid") ユーザー情報を更新
               .common-button.save-button(v-else) ユーザー情報を更新
+
+            .test
+              v-btn(@click="userSetting") テストDB追加
+            .test
+              v-btn(@click="fileUpload") テストDBicon追加
 
         v-tab-item.event-container
           .myevent-tab-wrapper
@@ -82,6 +93,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
+import uuid from 'uuid'
 
 export default {
   //layout: 'home',
@@ -96,12 +108,16 @@ export default {
 
   data(){
     return{
-      myUrl: "",
       tab: null,
       showModal: false,
       postItem: '',
+      uuid: '',
+      invalid: false,
+      iconImage: '',
+      iconPreviewImage: false,
       userFormData: {
         username: '',
+        coverImage: '',
       },
     };
   },
@@ -150,6 +166,89 @@ export default {
       console.log(myEventUrl)
       //this.$parent.flash_message = "コピーしました"
       //setTimeout(this.clearMessage,3000)
+
+    },
+
+    setError (error, text) {
+      this.error = (error.response && error.response.data && error.response.data.error) || text
+    },
+
+    getBase64(file){
+      return new Promise((resolve, reject) =>{
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+    },
+
+    iconChange(e){
+      // アップロード対象は1件のみとする
+      console.log('iconChange発火なう')
+      const image = (e.target.files || e.dataTransfer.files)[0]
+      console.log(image);
+      this.iconPreview(image);
+      this.iconPreviewImage = true;
+      this.getBase64(image)
+        .then(
+          image => this.iconImage = image,
+          )
+        .catch(error => this.setError(error, '画像のアップロードに失敗しました。'))
+    },
+
+    iconPreview(file){
+      const reader = new FileReader();
+      reader.onload = e => {
+        this.iconImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    fileUpload() {
+
+      const iconImage = this.iconImage;
+      const userId = this.$store.state.user.uid;
+      console.log(iconImage);
+
+      if (iconImage != null) {
+        const fileName = uuid()
+        console.log('ファイルネームは？')
+        console.log(fileName)
+        const uploadImage = this.$store.dispatch('persona/uploadImage', {
+          iconName: fileName,
+          file: iconImage,
+          userId: userId,
+        })
+      }
+      this.iconPreviewImage = false;
+    },
+
+    userSetting(){
+      const db = firebase.firestore();
+      const settings = { timestampsInSnapshots: true }
+      db.settings(settings)
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userName = this.userFormData.username;
+      console.log(userName);
+
+      if(userName != null){
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userName: userName,
+          iconImage: "icontest",
+          coverImage: "covertest"
+          })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
 
     },
 
@@ -233,6 +332,17 @@ export default {
 
         }
     }
+
+    .icon-unsetting-wrapper,
+    .icon-change-wrapper{
+      height: 100px;
+    }
+
+    .change-button-wrapper{
+      text-align: center;
+    }
+
+
     .icon-wrapper{
       .icon{
 
@@ -332,24 +442,24 @@ export default {
   position: relative;
   margin: 10px auto;
   border: 2px dotted #F0858C;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
 
   input.input-file{
     opacity: 0;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
   }
 
 }
 
 .upload-icon{
   position: absolute;
-  top: 6px;
-  left: 6.5px;
-  width: 40px;
-  height: 40px;
+  top: 16px;
+  left: 16px;
+  width: 60px;
+  height: 60px;
   color: #F0858C;
 }
 
