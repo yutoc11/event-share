@@ -5,7 +5,7 @@
   .icon-close
     i.material-icons photo_camera
   .icon-change-input
-    input.input-file(@change="$emit('iconChange',$event)" type="file")
+    input.input-file(@change="$emit('iconChange',$event, 'icon')" type="file")
 
 </template>
 

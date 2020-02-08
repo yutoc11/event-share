@@ -19,29 +19,45 @@
 
         v-tab-item.event-container
           .account-tab-wrapper
-            .user-name-wrapper.account-item-wrapper
-              .user-name.input-label ユーザー名
-              input(v-model="userFormData.username" type="text" name="username" placeholder="_o_s_a_o_" required="required" autocomplete="off").input-area
+            .user-name-wrapper.account-item-wrapper(v-if="isEditName")
+              .user-name-edit
+                .user-name.input-label ユーザー名
+                .change-button-wrapper
+                  .cancel-button.underline-link(@click="isEditName = false") キャンセル
+                  .name-change-button.change-button.underline-link(@click="usernameChange") 変更する
+              input(v-model="userFormData.username" type="text" name="username" placeholder="" autocomplete="off").input-area
+            .user-name-wrapper.account-item-wrapper(v-else)
+              .user-name-edit
+                .user-name.input-label ユーザー名
+                .change-button-wrapper
+                  .change-button.underline-link(@click="isEditName = true") 編集する
+              p(v-if="userFormData.username") {{ userFormData.username }}
 
             .icon-wrapper.account-item-wrapper
               .icon.input-label アイコン設定
 
               .icon-change-wrapper(v-if="iconImage")
-                user-icon(:iconImage="iconImage" v-on:iconChange="iconChange")
+                user-icon(:iconImage="iconImage" v-on:iconChange="imageChange")
                 .change-button-wrapper
-                  .change-button.underline-link(v-if="iconPreviewImage" @click="fileUpload") 変更する
+                  .change-button.underline-link(v-if="iconPreviewImage" @click="fileUpload('icon')") 変更する
+
               .icon-unsetting-wrapper(v-else)
                 .icon-upload-wrapper.upload-wrapper
-                  i.material-icons.upload-icon photo_camera
-                  input.input-file(@change="iconChange($event)" type="file")
+                  i.material-icons.icon-upload-icon photo_camera
+                  input.input-file(@change="imageChange($event,'icon')" type="file")
 
 
-            .cover-image-wrapper.account-item-wrapper
+            .cover-wrapper.account-item-wrapper
               .cover-image.input-label カバー画像設定
-              .cover-upload-wrapper.upload-wrapper
-                i.material-icons.upload-icon photo_camera
-                input.input-file(type="file")
-              user-cover
+
+              .cover-change-wrapper(v-if="coverImage")
+                user-cover(:coverImage="coverImage" v-on:coverChange="imageChange")
+                .change-button-wrapper
+                  .change-button.underline-link(v-if="coverPreviewImage" @click="fileUpload('cover')") 変更する
+
+              .cover-upload-wrapper.upload-wrapper(v-else)
+                i.material-icons.cover-upload-icon photo_camera
+                input.input-file(@change="imageChange($event,'cover')" type="file")
 
             .save-button-wrapper
               .common-button.disabled-button(v-if="invalid") ユーザー情報を更新
@@ -111,13 +127,15 @@ export default {
       tab: null,
       showModal: false,
       postItem: '',
+      isEditName: false,
       uuid: '',
       invalid: false,
       iconImage: '',
+      coverImage: '',
       iconPreviewImage: false,
+      coverPreviewImage: false,
       userFormData: {
         username: '',
-        coverImage: '',
       },
     };
   },
@@ -182,51 +200,98 @@ export default {
       })
     },
 
-    iconChange(e){
+    imageChange( e , type){
       // アップロード対象は1件のみとする
       console.log('iconChange発火なう')
       const image = (e.target.files || e.dataTransfer.files)[0]
       console.log(image);
-      this.iconPreview(image);
-      this.iconPreviewImage = true;
-      this.getBase64(image)
-        .then(
-          image => this.iconImage = image,
-          )
-        .catch(error => this.setError(error, '画像のアップロードに失敗しました。'))
-    },
 
-    iconPreview(file){
-      const reader = new FileReader();
-      reader.onload = e => {
-        this.iconImage = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    },
+      switch( type ){
 
-    fileUpload() {
-
-      const iconImage = this.iconImage;
-      const userId = this.$store.state.user.uid;
-      console.log(iconImage);
-
-      if (iconImage != null) {
-        const fileName = uuid()
-        console.log('ファイルネームは？')
-        console.log(fileName)
-        const uploadImage = this.$store.dispatch('persona/uploadImage', {
-          iconName: fileName,
-          file: iconImage,
-          userId: userId,
-        })
+        case 'icon':
+          this.preview(image, type);
+          this.iconPreviewImage = true;
+          this.getBase64(image)
+            .then(
+              image => this.iconImage = image,
+              )
+            .catch(error => this.setError(error, '画像のアップロードに失敗しました。'))
+          break;
+        case 'cover':
+        this.preview(image, type);
+        this.coverPreviewImage = true;
+          this.getBase64(image)
+            .then(
+              image => this.coverImage = image,
+              )
+            .catch(error => this.setError(error, '画像のアップロードに失敗しました。'))
+          break;
       }
-      this.iconPreviewImage = false;
     },
 
-    userSetting(){
+    preview(file, type){
+      const reader = new FileReader();
+      switch( type ){
+
+        case 'icon':
+          reader.onload = e => {
+            this.iconImage = e.target.result;
+          };
+          reader.readAsDataURL(file);
+          break;
+
+        case 'cover':
+          reader.onload = e => {
+            this.coverImage = e.target.result;
+          };
+          reader.readAsDataURL(file);
+          break;
+
+      }
+
+    },
+
+    fileUpload(type) {
+
+      const userId = this.$store.state.user.uid;
+
+      switch( type ){
+
+        case 'icon':
+          const iconImage = this.iconImage;
+          if (iconImage != null) {
+            const fileName = uuid()
+            console.log('ファイルネームは？')
+            console.log(fileName)
+            const iconUploadImage = this.$store.dispatch('persona/iconUploadImage', {
+              iconName: fileName,
+              file: iconImage,
+              userId: userId,
+            })
+          }
+          this.iconPreviewImage = false;
+          break;
+
+        case 'cover':
+          const coverImage = this.coverImage;
+          if (coverImage != null) {
+            const fileName = uuid()
+            console.log('ファイルネームは？')
+            console.log(fileName)
+            const coverUploadImage = this.$store.dispatch('persona/coverUploadImage', {
+              coverName: fileName,
+              file: coverImage,
+              userId: userId,
+            })
+          }
+          this.coverPreviewImage = false;
+          break;
+      }
+
+    },
+
+    usernameChange(){
       const db = firebase.firestore();
-      const settings = { timestampsInSnapshots: true }
-      db.settings(settings)
       const userId = this.$store.state.user.uid;
       console.log(userId);
       const userName = this.userFormData.username;
@@ -236,9 +301,32 @@ export default {
         db.collection("users").doc(userId).set({
           userId: userId,
           userName: userName,
-          iconImage: "icontest",
-          coverImage: "covertest"
-          })
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.isEditName = false;
+    },
+
+    userSetting(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userName = this.userFormData.username;
+      console.log(userName);
+
+      if(userName != null){
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userName: userName,
+          }, { merge: true })
           .then(
             function() {
               console.log("変更成功");
@@ -282,7 +370,7 @@ export default {
   margin-bottom: 10px;
 
   .your-url{
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   .confirm-wrapper{
@@ -328,8 +416,20 @@ export default {
     }
 
     .user-name-wrapper{
+      min-height: 55px;
         .user-name{
 
+        }
+
+        .user-name-edit{
+          display: flex;
+          justify-content: space-between;
+        }
+
+        p{
+          padding-left: 10px;
+          font-size: 0.8rem;
+          margin: 4px 0 0 0.5px;
         }
     }
 
@@ -339,7 +439,11 @@ export default {
     }
 
     .change-button-wrapper{
-      text-align: center;
+      display: flex;
+      justify-content: flex-end;
+      .name-change-button{
+        margin-left: 10px;
+      }
     }
 
 
@@ -438,7 +542,7 @@ export default {
 
 }
 
-.upload-wrapper{
+.icon-upload-wrapper{
   position: relative;
   margin: 10px auto;
   border: 2px dotted #F0858C;
@@ -454,13 +558,37 @@ export default {
 
 }
 
-.upload-icon{
+.icon-upload-icon{
   position: absolute;
   top: 16px;
   left: 16px;
   width: 60px;
   height: 60px;
   color: #F0858C;
+}
+
+.cover-upload-icon{
+  position: absolute;
+  top: 105px;
+  left: 203px;
+  width: 60px;
+  height: 60px;
+  color: #F0858C;
+}
+
+.cover-upload-wrapper{
+  position: relative;
+  margin: 10px auto;
+  border: 2px dotted #F0858C;
+  width: 432px;
+  height: 226.8px;
+
+  input.input-file{
+    opacity: 0;
+    width: 432px;
+    height: 226.8px;
+  }
+
 }
 
 .logout{
