@@ -2,10 +2,10 @@
   section.event-container
 
     section.your-url-wrapper
-      .your-url あなたのURL：https://event-share.net/{{ userFormData.username }}
+      .your-url あなたのURL：https://event-share.net/{{ username }}
       .confirm-wrapper
         .confirm-your-url
-          a.underline-link(:href="'https://event-share.net/'+ userFormData.username") 自分のページを確認する
+          a.underline-link(:href="'https://event-share.net/'+ username") 自分のページを確認する
         .copy-your-url(@click="copyMyUrl")
           v-icon(small) file_copy
 
@@ -25,13 +25,13 @@
                 .change-button-wrapper
                   .cancel-button.underline-link(@click="isEditName = false") キャンセル
                   .name-change-button.change-button.underline-link(@click="usernameChange") 変更する
-              input(v-model="userFormData.username" type="text" name="username" placeholder="" autocomplete="off").input-area
+              input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
             .user-name-wrapper.account-item-wrapper(v-else)
               .user-name-edit
                 .user-name.input-label ユーザー名
                 .change-button-wrapper
                   .change-button.underline-link(@click="isEditName = true") 編集する
-              p(v-if="userFormData.username") {{ userFormData.username }}
+              p(v-if="username") {{ username }}
 
             .icon-wrapper.account-item-wrapper
               .icon.input-label アイコン設定
@@ -127,9 +127,7 @@ export default {
       coverImage: '',
       iconPreviewImage: false,
       coverPreviewImage: false,
-      userFormData: {
-        username: '',
-      },
+      username: '',
     };
   },
 
@@ -171,7 +169,7 @@ export default {
     },
 
     copyMyUrl() {
-      const myEventUrl = 'https://event-share.net/'+ this.userFormData.username
+      const myEventUrl = 'https://event-share.net/'+ this.username
 
       this.$copyText(myEventUrl)
       console.log(myEventUrl)
@@ -287,7 +285,7 @@ export default {
       const db = firebase.firestore();
       const userId = this.$store.state.user.uid;
       console.log(userId);
-      const userName = this.userFormData.username;
+      const userName = this.username;
       console.log(userName);
 
       if(userName != null){
@@ -312,7 +310,7 @@ export default {
       const db = firebase.firestore();
       const userId = this.$store.state.user.uid;
       console.log(userId);
-      const userName = this.userFormData.username;
+      const userName = this.username;
       console.log(userName);
 
       if(userName != null){
