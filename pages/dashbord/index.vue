@@ -43,7 +43,8 @@
 
               .icon-unsetting-wrapper(v-else)
                 .icon-upload-wrapper.upload-wrapper
-                  i.material-icons.icon-upload-icon photo_camera
+                  .icon-upload-icon-wrapper
+                    i.material-icons.icon-upload-icon photo_camera
                   input.input-file(@change="imageChange($event,'icon')" type="file")
 
 
@@ -56,17 +57,9 @@
                   .change-button.underline-link(v-if="coverPreviewImage" @click="fileUpload('cover')") 変更する
 
               .cover-upload-wrapper.upload-wrapper(v-else)
-                i.material-icons.cover-upload-icon photo_camera
+                .cover-upload-icon-wrapper
+                  i.material-icons.cover-upload-icon photo_camera
                 input.input-file(@change="imageChange($event,'cover')" type="file")
-
-            .save-button-wrapper
-              .common-button.disabled-button(v-if="invalid") ユーザー情報を更新
-              .common-button.save-button(v-else) ユーザー情報を更新
-
-            .test
-              v-btn(@click="userSetting") テストDB追加
-            .test
-              v-btn(@click="fileUpload") テストDBicon追加
 
         v-tab-item.event-container
           .myevent-tab-wrapper
@@ -558,6 +551,12 @@ export default {
 
 }
 
+.icon-upload-icon-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .icon-upload-icon{
   position: absolute;
   top: 16px;
@@ -569,11 +568,14 @@ export default {
 
 .cover-upload-icon{
   position: absolute;
-  top: 105px;
-  left: 203px;
-  width: 60px;
-  height: 60px;
+  top: 100px;
   color: #F0858C;
+}
+
+.cover-upload-icon-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cover-upload-wrapper{
@@ -650,6 +652,20 @@ export default {
 
     }
 
+  }
+  .cover-upload-wrapper{
+    width: 85vw;
+    height: 42vw;
+
+    input.input-file{
+      width: 85vw;
+      height: 42vw;
+    }
+
+  }
+
+  .cover-upload-icon{
+    top: 17vw;
   }
 }
 
