@@ -370,6 +370,9 @@ export default {
     justify-content: center;
     .confirm-your-url{
       line-height: 30px;
+      a.underline-link{
+        color: #565656;
+      }
     }
     .confirm-your-url:hover{
     }

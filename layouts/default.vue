@@ -5,8 +5,11 @@
         .header-menu
           .header-logo
             img(src="~/assets/images/logo.png")
-          .header-login
-             .login-button(@click="googleLogin")
+          .header-menu-list
+            .header-tomypage(v-if="isAuthenticated")
+              nuxt-link.tomypage-button(to="/dashbord") マイページへ
+            .header-login(v-else)
+               .login-button(@click="googleLogin")
         .header-line
 
       section
@@ -110,7 +113,7 @@ p{
 }
 
 a{
-  color: #565656!important;
+  color: #565656;
 }
 .underline-link{
   font-size: 0.8rem;
@@ -183,6 +186,32 @@ header{
     height: 48px;
   }
 
+  .header-menu-list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .header-tomypage{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tomypage-button{
+      background-color: #F0858C;
+      width: 100px;
+      margin: 4px 8px;
+      padding: 10px;
+      line-height:  12px;
+      font-size:  12px;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 6px;
+      text-align: center;
+      text-decoration: none;
+    }
+  }
+
 }
 
 .input-label{
@@ -227,9 +256,8 @@ textarea:focus{
 
 
 .common-button{
-  background-color: #F9DBDB;
+  background-color: #F0858C;
   min-width:250px;
-  width: 50%;
   padding: 8px 6px;
   border-radius: 6px;
   margin: 16px auto;
@@ -237,6 +265,7 @@ textarea:focus{
   color: #565656;
 }
 
+.tomypage-button:hover,
 .common-button:hover{
   cursor: pointer;
   opacity: 0.7;
