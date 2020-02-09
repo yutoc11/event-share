@@ -5,7 +5,7 @@
       .your-url あなたのURL：https://event-share.net/{{ username }}
       .confirm-wrapper
         .confirm-your-url
-          a.underline-link(:href="'https://event-share.net/'+ username") 自分のページを確認する
+          a.underline-link(:href="'https://event-share.net/'+ username" target="_blank") 自分のページを確認する
         .copy-your-url(@click="copyMyUrl")
           v-icon(small) file_copy
 
@@ -89,6 +89,7 @@
     section.test
       nuxt-link(to="/") トップへ
       p(v-if="$store.state.user") email： {{$store.state.user.email}}
+      p(v-if="userinfo") {{ userinfo }}
 
     section
       artwork-modal(:val="postItem" v-if="showModal")
@@ -136,9 +137,10 @@ export default {
       fvWidth: "",
       fvHeight: "",
       flash_message: "",
+      //flash: context.query['flash'],
+      userinfo: [],
     };
   },
-
 
   computed:{
     //...mapState(['fashions']),
@@ -148,6 +150,26 @@ export default {
     myUrl: function () {
         return 'https://event-share.net/' + this.username
     }
+
+  },
+
+  created: function(){
+
+    firebase.auth().onAuthStateChanged((user)=> {
+      if (user) {
+        this.setUser(user)
+        this.$router.push("/dashbord")
+
+        const db = firebase.firestore();
+
+        db.collection('users').doc(this.user.uid).get().then((doc) =>{
+            console.log('読み取りなう');
+            console.log(doc.data());
+            this.userinfo = doc.data();
+          }
+        )
+      }
+    })
 
   },
 
