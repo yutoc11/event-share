@@ -17,7 +17,7 @@ export const actions = {
 
                                       card.set({
                                         iconName: payload.iconName,
-                                        iconurl: `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${encodeURIComponent(payload.iconName)}?alt=media`,
+                                        iconUrl: `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${encodeURIComponent(payload.iconName)}?alt=media`,
                                       }, { merge: true })
                                     })
       return uploadTask
@@ -35,7 +35,7 @@ coverUploadImage: async (context, payload) => {
 
                                      card.set({
                                        coverName: payload.coverName,
-                                       coverurl: `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${encodeURIComponent(payload.coverName)}?alt=media`,
+                                       coverUrl: `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${encodeURIComponent(payload.coverName)}?alt=media`,
                                      }, { merge: true })
                                    })
      return uploadTask

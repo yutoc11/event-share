@@ -89,7 +89,6 @@
     section.test
       nuxt-link(to="/") トップへ
       p(v-if="$store.state.user") email： {{$store.state.user.email}}
-      p(v-if="userinfo") {{ userinfo }}
 
     section
       artwork-modal(:val="postItem" v-if="showModal")
@@ -128,6 +127,7 @@ export default {
       coverImage: '',
       iconPreviewImage: false,
       coverPreviewImage: false,
+      isChangeUserData: false,
       username: '',
     };
   },
@@ -138,19 +138,30 @@ export default {
       fvHeight: "",
       flash_message: "",
       //flash: context.query['flash'],
-      userinfo: [],
     };
   },
 
   computed:{
     //...mapState(['fashions']),
     ...mapState(['user']),
+    ...mapState(['userinfo']),
     ...mapGetters(['isAuthenticated']),
 
     myUrl: function () {
         return 'https://event-share.net/' + this.username
-    }
+    },
+  },
 
+  watch: {
+    // この関数は isChangeUserData が変わるごとに実行されます。
+    isChangeUserData: function () {
+      if(this.isChangeUserData){
+        console.log('チェンジを検知！')
+        //本当はよくない処理
+        setTimeout(this.getUserInfo,1000);
+        this.isChangeUserData  = false;
+      }
+    }
   },
 
   created: function(){
@@ -165,7 +176,11 @@ export default {
         db.collection('users').doc(this.user.uid).get().then((doc) =>{
             console.log('読み取りなう');
             console.log(doc.data());
-            this.userinfo = doc.data();
+            this.setUserInfo(doc.data());
+            this.iconImage = doc.data().iconUrl;
+            console.log(this.iconImage)
+            this.coverImage = doc.data().coverUrl;
+            console.log(this.coverImage)
           }
         )
       }
@@ -185,6 +200,7 @@ export default {
   methods: {
 
     ...mapActions(['setUser']),
+    ...mapActions(['setUserInfo']),
 
     openModal(artwork) {
       this.showModal = true;
@@ -281,8 +297,11 @@ export default {
               file: iconImage,
               userId: userId,
             })
+            this.isChangeUserData = true;
+            this.iconPreviewImage = false;
+            //this.iconImage = false;
           }
-          this.iconPreviewImage = false;
+
           break;
 
         case 'cover':
@@ -296,8 +315,11 @@ export default {
               file: coverImage,
               userId: userId,
             })
+            this.isChangeUserData = true;
+            this.coverPreviewImage = false;
+          //this.coverImage = false;
           }
-          this.coverPreviewImage = false;
+
           break;
       }
 
@@ -311,6 +333,7 @@ export default {
       console.log(userName);
 
       if(userName != null){
+        this.$store.state.userinfo.userName = userName;
         db.collection("users").doc(userId).set({
           userId: userId,
           userName: userName,
@@ -351,6 +374,17 @@ export default {
           );
       }
 
+    },
+
+    getUserInfo(){
+      const db = firebase.firestore();
+
+      db.collection('users').doc(this.user.uid).get().then((doc) =>{
+          console.log('読み取りなう');
+          console.log(doc.data());
+          this.setUserInfo(doc.data());
+        }
+      )
     },
 
     //ログアウト

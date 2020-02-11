@@ -2,6 +2,8 @@
 .icon-image-wrapper
   .icon-display-wrapper
     img(:src="iconImage")
+
+
   .icon-close
     i.material-icons photo_camera
   .icon-change-input

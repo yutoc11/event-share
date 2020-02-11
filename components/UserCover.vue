@@ -102,6 +102,15 @@ export default {
         height: 42vw;
       }
     }
+    .cover-change-input{
+      width: 85vw;
+      height: 42vw;
+      input.input-file{
+        width: 85vw;
+        height: 42vw;
+      }
+    }
 
   }
+
 </style>
