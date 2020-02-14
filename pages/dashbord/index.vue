@@ -2,7 +2,8 @@
   section.event-container
 
     section.your-url-wrapper
-      .your-url あなたのURL：https://event-share.net/{{ username }}
+      .your-url あなたのURL
+      .your-url {{ myUrl }}
       .confirm-wrapper
         .confirm-your-url
           a.underline-link(:href="'https://event-share.net/'+ username" target="_blank") 自分のページを確認する
@@ -26,12 +27,21 @@
                   .cancel-button.underline-link(@click="isEditName = false") キャンセル
                   .name-change-button.change-button.underline-link(@click="usernameChange") 変更する
               input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
-            .user-name-wrapper.account-item-wrapper(v-else)
+            .user-name-wrapper.account-item-wrapper(v-else-if="username")
               .user-name-edit
                 .user-name.input-label ユーザー名
                 .change-button-wrapper
                   .change-button.underline-link(@click="isEditName = true") 編集する
               p(v-if="username") {{ username }}
+            .user-name-wrapper.account-item-wrapper(v-else)
+              .user-name-edit
+                .user-name.input-label ユーザー名
+                .change-button-wrapper
+                  .change-button.underline-link(@click="isEditName = true") 編集する
+              .username-display(v-if="isSetuserName")
+                p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
+                p(v-else-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
+
 
             .icon-wrapper.account-item-wrapper
               .icon.input-label アイコン設定
@@ -89,6 +99,8 @@
     section.test
       nuxt-link(to="/") トップへ
       p(v-if="$store.state.user") email： {{$store.state.user.email}}
+      .test(v-if="isSetuserName")
+        p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
 
     section
       artwork-modal(:val="postItem" v-if="showModal")
@@ -129,6 +141,7 @@ export default {
       coverPreviewImage: false,
       isChangeUserData: false,
       username: '',
+      isSetuserName: false,
     };
   },
 
@@ -148,8 +161,22 @@ export default {
     ...mapGetters(['isAuthenticated']),
 
     myUrl: function () {
-        return 'https://event-share.net/' + this.username
-    },
+      if(this.isSetuserName){
+        if(this.$store.state.userinfo.userName){
+          let myUrl = 'https://event-share.net/' + this.$store.state.userinfo.userName;
+          console.log("this.$store.state.userinfo.userName")
+          return myUrl;
+        }else if(this.username){
+          let myUrl = 'https://event-share.net/' + this.username;
+          console.log("this.username")
+          return myUrl;
+        }else{
+          let myUrl = 'https://event-share.net/' + this.$store.state.user.uid;
+          console.log("this.$store.state.user.uid")
+          return myUrl;
+        }
+      }
+    }
   },
 
   watch: {
@@ -177,6 +204,8 @@ export default {
             console.log('読み取りなう');
             console.log(doc.data());
             this.setUserInfo(doc.data());
+            this.userName = doc.data().userName;
+            this.isSetuserName = true;
             this.iconImage = doc.data().iconUrl;
             console.log(this.iconImage)
             this.coverImage = doc.data().coverUrl;
@@ -417,7 +446,7 @@ export default {
   margin-bottom: 10px;
 
   .your-url{
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
 
   .confirm-wrapper{
