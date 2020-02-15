@@ -50,7 +50,7 @@ transition(name="modal")
                           p(v-show="errors.length" class="help is-danger") {{ errors[0] }}
                     .save-button-wrapper
                       .common-button.disabled-button(v-if="invalid") イベントを追加
-                      .common-button.save-button(v-else @click="sendContact()") イベントを追加
+                      .common-button.save-button(v-else @click="addEvent") イベントを追加
                       .error-ms-wrapper
                         p.caption(v-show="invalid" class="help") ※必須項目を入力してください。
         .close-link-wrapper
@@ -58,6 +58,8 @@ transition(name="modal")
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
+import uuid from 'uuid'
 
 export default {
 
@@ -73,7 +75,7 @@ export default {
       formData: {
         eventTitle: '',
         booth: '',
-        shopNameshopName: '',
+        shopName: '',
         eventURL: '',
         comment: '',
         eventDates: [''],
@@ -95,6 +97,52 @@ export default {
     closeModal() {
       this.$parent.showModal = false;
     },
+
+    addEvent(){
+      console.log('addEventなう');
+
+      //入力内容の確認
+      console.log(this.formData);
+      const eventData = this.formData;
+
+      //日付設定をDate型へ変換する文字列に変換
+      let startDateStr = `${eventData.eventDates[0]}T00:00:00+09:00`;
+      let endDateStr = `${eventData.eventDates[1]}T00:00:00+09:00`;
+      //日付を表す数値に変換
+      let startDate = Date.parse(startDateStr);
+      let endDate = Date.parse(endDateStr);
+
+      //firestoreに登録
+      const db = firebase.firestore();
+      const fileName = uuid()
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+
+      if( userId != null){
+        //this.$store.state.userinfo.userName = userName;
+        db.collection("users").doc(userId).collection("events").doc(fileName).set({
+          eventType: 'store',
+          eventTitle: eventData.eventTitle,
+          booth: eventData.booth,
+          shopName: eventData.shopName,
+          eventURL: eventData.eventURL,
+          comment: eventData.comment,
+          eventStartDate: firebase.firestore.Timestamp.fromDate(new Date(startDateStr)),
+          eventEndDate: firebase.firestore.Timestamp.fromDate(new Date(endDateStr)),
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.$parent.showModal = false;
+
+    }
 
   }
 }
