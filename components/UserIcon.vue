@@ -1,12 +1,12 @@
 <template lang="pug">
-.icon-image-wrapper
+.icon-image-wrapper(v-bind:class="{ dashicon: isDashbord}")
   .icon-display-wrapper
     img(:src="iconImage")
 
 
-  .icon-close
+  .icon-close(v-if="isDashbord")
     i.material-icons photo_camera
-  .icon-change-input
+  .icon-change-input(v-if="isDashbord")
     input.input-file(@change="$emit('iconChange',$event, 'icon')" type="file")
 
 </template>
@@ -15,7 +15,7 @@
 
 export default {
 
-  props:['iconImage'],
+  props:['iconImage','isDashbord'],
 
   computed:{
   },
@@ -29,27 +29,44 @@ export default {
 
 .icon-image-wrapper{
   position: relative;
-  width: 60px;
+  width: 100px;
   margin: 0 auto;
+}
+
+.icon-image-wrapper.dashicon{
+  width: 60px;
 }
 
 .icon-display-wrapper{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px auto;
-  width: 60px;
-  height: 60px;
   border-radius: 50%;
   background-color: transparent;
+  width: 100px;
+  height: 100px;
   img{
     border: 3px solid #fff;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
     object-fit: cover;
+    width: 100px;
+    height: 100px;
   }
 }
+
+.dashicon{
+  .icon-display-wrapper{
+    margin: 10px auto;
+    width: 60px;
+    height: 60px;
+    img{
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+
+
 
 .icon-close{
   position: absolute;

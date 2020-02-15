@@ -47,7 +47,7 @@
               .icon.input-label アイコン設定
 
               .icon-change-wrapper(v-if="iconImage")
-                user-icon(:iconImage="iconImage" v-on:iconChange="imageChange")
+                user-icon(:iconImage="iconImage" :isDashbord="isDashbord" v-on:iconChange="imageChange")
                 .change-button-wrapper
                   .change-button.underline-link(v-if="iconPreviewImage" @click="fileUpload('icon')") 変更する
 
@@ -62,7 +62,7 @@
               .cover-image.input-label カバー画像設定
 
               .cover-change-wrapper(v-if="coverImage")
-                user-cover(:coverImage="coverImage" v-on:coverChange="imageChange")
+                user-cover(:coverImage="coverImage" :isDashbord="isDashbord" v-on:coverChange="imageChange")
                 .change-button-wrapper
                   .change-button.underline-link(v-if="coverPreviewImage" @click="fileUpload('cover')") 変更する
 
@@ -142,6 +142,7 @@ export default {
       isChangeUserData: false,
       username: '',
       isSetuserName: false,
+      isDashbord: true,
     };
   },
 
@@ -176,7 +177,7 @@ export default {
           return myUrl;
         }
       }
-    }
+    },
   },
 
   watch: {

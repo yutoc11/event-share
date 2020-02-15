@@ -1,10 +1,10 @@
 <template lang="pug">
-.cover-image-wrapper
+.cover-image-wrapper(v-bind:class="{ dashcover: isDashbord}")
   .cover-display-wrapper
     img(:src="coverImage")
-  .cover-close
+  .cover-close(v-if="isDashbord")
     i.material-icons photo_camera
-  .cover-change-input
+  .cover-change-input(v-if="isDashbord")
     input.input-file(@change="$emit('coverChange',$event, 'cover')" type="file")
 </template>
 
@@ -12,9 +12,15 @@
 
 export default {
 
-  props:['coverImage'],
+  props:['coverImage','isDashbord'],
+
+  data(){
+    return{
+    };
+  },
 
   computed:{
+
   },
 
   methods: {
@@ -30,18 +36,27 @@ export default {
   margin: 0 auto;
 }
 
+.dashcover{
+  .cover-display-wrapper{
+      margin: 10px auto;
+      img{
+        border: 3px solid #fff;
+      }
+  }
+
+}
+
 .cover-display-wrapper{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px auto;
+  margin: 0 auto;
   background-color: #F0858C;
   width: 432px;
   height: 226.8px;
   background-color: transparent;
 
   img{
-    border: 3px solid #fff;
     width: 432px;
     height: 226.8px;
     object-fit: cover;
@@ -90,18 +105,36 @@ export default {
 
   @media screen and (max-width: 480px) {
 
-    .cover-image-wrapper{
+    .cover-image-wrapper.dashcover{
       width: 85vw;
     }
 
+    .cover-image-wrapper{
+        width: 100vw;
+    }
+
+
+
     .cover-display-wrapper{
-      width: 85vw;
-      height: 42vw;
+      width: 100vw;
+      height: 52.5vw;
       img{
-        width: 85vw;
-        height: 42vw;
+        width: 100vw;
+        height: 52.5vw;
       }
     }
+
+    .dashcover{
+      .cover-display-wrapper{
+        width: 85vw;
+        height: 42vw;
+        img{
+          width: 85vw;
+          height: 42vw;
+        }
+      }
+    }
+
     .cover-change-input{
       width: 85vw;
       height: 42vw;
