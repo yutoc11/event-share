@@ -77,20 +77,7 @@
             .myevent-divider
             .myevent-wrapper
               .myevent-all-delete-wrapper.underline-link 過去のイベントを全て削除する
-              .myevent-list-wrapper
-                .myevent-content-wrapper
-                  p.prefecture 神奈川県
-                  p.date 2020.4.20 (火)
-                  h3.event-title 横浜ハンドメイドマルシェ2020春
-                  p.position A-8
-                  p.booth-name osao handmade
-                  p.oficial-link.underline-link 公式HPでみる
-                  .edit-wrapper
-                    .delete.underline-link 削除
-                    .edit.underline-link 編集
-                .no-event-wrapper
-                  p.no-ivent まだ参加イベントが登録されていません。
-              event-list(:events="events")
+              event-list(:events="events" :isDashbord="isDashbord")
 
         v-tab-item.event-container
           .logout

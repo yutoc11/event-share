@@ -1,24 +1,28 @@
 <template lang="pug">
   section.pubuser-page-container(v-if="isCatchData")
-    .user-cover-image-wrapper
-      user-cover(:coverImage="userOpenData.coverUrl")
-    .user-icon-image-wrapper
-      .user-icon-image
-        user-icon(:iconImage="userOpenData.iconUrl")
-    .username-wrapper
-      h3 {{userName}}
-    .myevent-store-wrapper
-      .store-info-label 販売情報
-      v-tabs(v-model="tab" background-color="transparent" color="#F0858C" grow)
+    section.user-info-wrapper
+      .user-cover-image-wrapper
+        user-cover(:coverImage="userOpenData.coverUrl")
+      .user-icon-image-wrapper
+        .user-icon-image
+          user-icon(:iconImage="userOpenData.iconUrl")
+      .username-wrapper
+        h3 {{userName}}
+      .myevent-store-wrapper
+        .store-info-label 販売情報
+
+    section.event-info-wrapper
+      v-tabs.event-tab-wrapper(v-model="tab" background-color="transparent" color="#F0858C" grow)
         v-tab これから
         v-tab 今まで
+
       v-tabs-items.event-tab-container(v-model="tab")
 
         v-tab-item.future-store-container
-          .future-store-list-wrapper これからのイベントたぶ
+          event-list(:events="futureEvents")
 
         v-tab-item.previous-store-container
-          .previous-store-list-wrapper 過去のイベントたぶ
+          event-list(:events="pastEvents")
 
 
 </template>
@@ -30,6 +34,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
+import EventList from '~/components/EventList.vue'
 import uuid from 'uuid'
 
 export default {
@@ -50,12 +55,15 @@ export default {
       isCatchData : false,
       isDashbord: false,
       tab: null,
+      futureEvents: [],
+      pastEvents: [],
     };
   },
 
   components: {
     UserIcon,
     UserCover,
+    EventList,
   },
 
   computed:{
@@ -63,7 +71,11 @@ export default {
   },
 
   mounted: function(){
-    console.log('マウントわず')
+
+
+  },
+
+  beforeCreate(){
     this.userName = this.$route.path.slice(1);
     console.log(this.userName)
     const db = firebase.firestore();
@@ -74,7 +86,11 @@ export default {
 
              this.isCatchData = true;
              this.userOpenData = doc.data();
-             //console.log(this.userOpenData)
+             console.log(this.userOpenData)
+             console.log(this.isCatchData)
+             console.log('↑キャッチしたよ！')
+             setTimeout(this.getEvents,100);
+
            }
          );
 
@@ -82,10 +98,53 @@ export default {
          .catch(function(error) {
            console.log("Error getting documents: ", error);
          });
-
   },
 
   methods: {
+    getEvents(){
+      console.log("getEvents")
+        const db = firebase.firestore();
+        const currentTime = new Date();
+        console.log(currentTime)
+
+        db.collection('users').doc(this.userOpenData.userId).collection('events')
+          .where("eventEndDate", ">", currentTime)
+          .orderBy("eventEndDate", "desc")
+           .get().then((querySnapshot) => {
+             console.log(querySnapshot)
+             console.log(querySnapshot.docs)
+             this.futureEvents = [];
+             querySnapshot.forEach((doc) => {
+                 console.log('追加時のリスト読み取りなう');
+                 console.log(doc.data());
+                 this.futureEvents.push(doc.data())
+               }
+             );
+
+             })
+             .catch(function(error) {
+               console.log("Error getting documents: ", error);
+             });
+
+         db.collection('users').doc(this.userOpenData.userId).collection('events')
+           .where("eventEndDate", "<=", currentTime)
+           .orderBy("eventEndDate", "desc")
+            .get().then((querySnapshot) => {
+              console.log(querySnapshot)
+              console.log(querySnapshot.docs)
+              this.pastEvents = [];
+              querySnapshot.forEach((doc) => {
+                  console.log('追加時のリスト読み取りなう');
+                  console.log(doc.data());
+                  this.pastEvents.push(doc.data())
+                }
+              );
+
+              })
+              .catch(function(error) {
+                console.log("Error getting documents: ", error);
+              });
+    }
   }
 }
 </script>
@@ -129,6 +188,16 @@ body{
   font-size: 0.7rem;
   font-weight: bold;
   color: #565656;
+}
+.event-info-wrapper{
+  padding: 12px;
+  //min-height: 100vw;
+  .event-tab-wrapper{
+    margin-bottom: 10px;
+  }
+}
+.event-tab-container{
+
 }
 
 

@@ -6,11 +6,13 @@
         nuxt/
 
       section
-        .test.center-text 自分のページを作ってみる
 
-      footer.hf-bg-color
-        .center-text
-          p.footer-text ©2019 event-share.
+
+      footer
+        .footer-text.center-text イベント予定ページをつくりたい方はこちら
+        .footer-logo
+          nuxt-link(to="/")
+            img(src="~/assets/images/logo.png")
 </template>
 <script>
 import firebase from '@/plugins/firebase'
@@ -54,6 +56,11 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
   color: #565656;
+}
+
+body,
+.v-application--wrap{
+  background-color: #F9FBFE;
 }
 
 *,
@@ -286,11 +293,27 @@ section{
 }
 
 footer{
-  padding: 18px 0;
+  padding: 4px 0;
   line-height: 18px;
-  background-color: rgba(255,255,255,0);
-  p.footer-text{
-    margin-bottom: 0;
+  .footer-text{
+    color: #F0858C;
+    font-size: 0.75rem;
+    letter-spacing: 1.2px;
+  }
+  .footer-text::before{
+    content: "▼";
+  }
+  .footer-text::after{
+    content: "▼";
+  }
+  .footer-logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    img{
+      height: 40px;
+    }
   }
 }
 </style>

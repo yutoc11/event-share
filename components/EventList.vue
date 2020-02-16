@@ -1,22 +1,24 @@
 <template lang="pug">
 .myevent-list-wrapper
-  .myevent-content-wrapper(v-for="(event, index) in events" :key="index")
-    p.prefecture {{event.prefecture}}
+  .myevent-content-wrapper(v-if="events" v-for="(event, index) in events" :key="index")
+    p.prefecture {{event.prefectureName}}
     p.date(v-if="event.eventStartDate") {{formatDate(event.eventStartDate)}}〜{{formatDate(event.eventEndDate)}}
     p.date(v-else) {{formatDate(event.eventEndDate)}}
     h3.event-title {{event.eventTitle}}
     p.position {{event.booth}}
     p.booth-name {{event.shopName}}
     a.oficial-link.underline-link(:href="event.eventURL") 公式HPでみる
-    .edit-wrapper
+    .edit-wrapper(v-if="isDashbord")
       .delete.underline-link 削除
       .edit.underline-link 編集
+  .no-event-wrapper(v-else)
+    p.no-ivent まだイベントがありません。
 </template>
 
 <script>
 
 export default {
-  props:['events'],
+  props:['events','isDashbord'],
 
   data(){
     return{
@@ -42,6 +44,8 @@ export default {
 <style lang="scss">
 
 .myevent-list-wrapper{
+
+    text-align: center;
     .myevent-content-wrapper{
 
       padding: 10px;
@@ -49,8 +53,24 @@ export default {
       border-radius: 15px;
       border: 3px solid #F9DBDB;
       background: #fff;
+      h3{
+        margin-bottom: 4px;
+        font-weight: bold;
+      }
       p{
         margin-bottom: 4px;
+      }
+
+
+      a.oficial-link{
+        font-size: 0.8rem;
+        text-decoration: underline;
+        color: #565656;
+      }
+
+      a.oficial-link:hover{
+        cursor: pointer;
+        opacity: 0.7;
       }
 
       .prefecture{
@@ -59,24 +79,20 @@ export default {
         font-size: 0.8rem;
       }
 
-      .date{
+      .no-ivent,
+      .date,
+      .oficial-link,{
         font-size: 0.8rem;
       }
       .event-title{
         font-size: 0.95rem;
       }
-      .position{
-        font-size: 0.8rem;
-        margin-bottom: 2px;
-        line-height: 0.8rem;
-      }
+      .position,
       .booth-name{
         font-size: 0.8rem;
         line-height: 0.8rem;
       }
-      .oficial-link{
-        font-size: 0.8rem;
-      }
+
       .edit-wrapper{
 
         display: flex;
