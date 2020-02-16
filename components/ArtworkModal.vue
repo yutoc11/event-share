@@ -16,7 +16,7 @@ transition(name="modal")
                       v-model="formData.eventDates"
                       full-width
                       range
-                      no-title="true"
+                      no-title
                       color="#F0858C"
                     )
                   .date-display-wrapper
@@ -30,18 +30,25 @@ transition(name="modal")
                         input(v-model="formData.eventTitle" type="text" name="EventTitle" placeholder="ハンドメイドマルシェ" required="required" autocomplete="off").input-area
                         .error-ms-wrapper
                           p(v-show="errors.length" class="help is-danger") {{ errors[0] }}
+                    .event-prefecture-wrapper.event-contents-wrapper
+                      .input-label 都道府県：必須
+                      validation-provider(v-slot="{ errors }" rules="required" name="都道府県")
+                        select.input-area.prefecture-selectbox(v-model="formData.prefectureCode" required name="pref_id")
+                          option(:value="prefecture.code" v-for="(prefecture, index) in prefectures" :key="index") {{prefecture.name}}
+                        .error-ms-wrapper
+                          p(v-show="errors.length" class="help is-danger") {{ errors[0] }}
                     .event-title-wrapper.event-contents-wrapper
                       .input-label 場所（ブース番号など）：任意
-                        input(v-model="formData.booth" type="text" name="Booth" placeholder="A-18" autocomplete="off").input-area
-                        .error-ms-wrapper
+                      input(v-model="formData.booth" type="text" name="Booth" placeholder="A-18" autocomplete="off").input-area
+                      .error-ms-wrapper
                     .event-shoptitle-wrapper.event-contents-wrapper
                       .input-label ショップ名：任意
-                        input(v-model="formData.shopName" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
-                        .error-ms-wrapper
+                      input(v-model="formData.shopName" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
+                      .error-ms-wrapper
                     .event-officialhp-wrapper.event-contents-wrapper
                       .input-label イベント公式HP：任意
-                        input(v-model="formData.eventURL" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
-                        .error-ms-wrapper
+                      input(v-model="formData.eventURL" type="text" name="ShopName" placeholder="osao handmade" autocomplete="off").input-area
+                      .error-ms-wrapper
                     .event-comment-wrapper.event-contents-wrapper
                       .input-label コメント：任意
                       validation-provider(v-slot="{ errors }" rules="max:1000" name="コメント")
@@ -61,12 +68,13 @@ transition(name="modal")
 import firebase from '@/plugins/firebase'
 import uuid from 'uuid'
 
+
 export default {
 
   name: 'ArtworkModal',
 
   props:[
-    'val'
+    'prefectures'
   ],
 
   data(){
@@ -78,8 +86,8 @@ export default {
         shopName: '',
         eventURL: '',
         comment: '',
-        eventDates: [''],
-      }
+        eventDates: [],
+      },
     };
   },
 
@@ -106,43 +114,87 @@ export default {
       const eventData = this.formData;
 
       //日付設定をDate型へ変換する文字列に変換
-      let startDateStr = `${eventData.eventDates[0]}T00:00:00+09:00`;
-      let endDateStr = `${eventData.eventDates[1]}T00:00:00+09:00`;
+      let endDateStr = (eventData.eventDates[0] != null) ? `${eventData.eventDates[0]}T00:00:00+09:00` : '';
+      let startDateStr = (eventData.eventDates[1] != null) ? `${eventData.eventDates[1]}T00:00:00+09:00` : '';
+      //let startDateStr = `${eventData.eventDates[0]}T00:00:00+09:00`;
+      //let endDateStr = `${eventData.eventDates[1]}T00:00:00+09:00`;
       //日付を表す数値に変換
       let startDate = Date.parse(startDateStr);
       let endDate = Date.parse(endDateStr);
 
+      console.log(endDateStr)
+      console.log(endDate)
+
+      //前後逆になっていたら値を変更
+      if(startDateStr && startDate > endDate ){
+        console.log('前後逆転！')
+        let oldStartDateStr = startDateStr
+        let oldEndDateStr = endDateStr
+        startDateStr = oldEndDateStr
+        endDateStr = oldStartDateStr
+      }
       //firestoreに登録
       const db = firebase.firestore();
       const fileName = uuid()
       const userId = this.$store.state.user.uid;
       console.log(userId);
+      const prefecture = this.prefectures[eventData.prefectureCode]
+      console.log(prefecture)
 
       if( userId != null){
         //this.$store.state.userinfo.userName = userName;
-        db.collection("users").doc(userId).collection("events").doc(fileName).set({
-          eventType: 'store',
-          eventTitle: eventData.eventTitle,
-          booth: eventData.booth,
-          shopName: eventData.shopName,
-          eventURL: eventData.eventURL,
-          comment: eventData.comment,
-          eventStartDate: firebase.firestore.Timestamp.fromDate(new Date(startDateStr)),
-          eventEndDate: firebase.firestore.Timestamp.fromDate(new Date(endDateStr)),
-          }, { merge: true })
-          .then(
-            function() {
-              console.log("変更成功");
-            }
-          ).catch(
-            function(error) {
-              console.error("Error adding document: ", error);
-            }
-          );
-      }
-      this.$parent.showModal = false;
+        if(!startDateStr){
+          //期間が1日でで入力されている場合
+          db.collection("users").doc(userId).collection("events").doc(fileName).set({
+            eventType: 'store',
+            eventTitle: eventData.eventTitle,
+            prefectureCode: prefecture.code,
+            prefectureName: prefecture.name,
+            booth: eventData.booth,
+            shopName: eventData.shopName,
+            eventURL: eventData.eventURL,
+            comment: eventData.comment,
+            eventEndDate: firebase.firestore.Timestamp.fromDate(new Date(endDateStr)),
+            }, { merge: true })
+            .then(
+              function() {
+                console.log("変更成功");
+              }
+            ).catch(
+              function(error) {
+                console.error("Error adding document: ", error);
+              }
+            );
+        }else{
+          //期間が終わりと始まりで入力されている場合
+          db.collection("users").doc(userId).collection("events").doc(fileName).set({
+            eventType: 'store',
+            eventTitle: eventData.eventTitle,
+            prefectureCode: prefecture.code,
+            prefectureName: prefecture.name,
+            booth: eventData.booth,
+            shopName: eventData.shopName,
+            eventURL: eventData.eventURL,
+            comment: eventData.comment,
+            eventStartDate: firebase.firestore.Timestamp.fromDate(new Date(startDateStr)),
+            eventEndDate: firebase.firestore.Timestamp.fromDate(new Date(endDateStr)),
+            }, { merge: true })
+            .then(
+              function() {
+                console.log("変更成功");
+              }
+            ).catch(
+              function(error) {
+                console.error("Error adding document: ", error);
+              }
+            );
+        }
 
-    }
+      }
+      this.$parent.isAddEvent = true;
+      this.$parent.showModal = false;
+      setTimeout(this.$parent.getEvents,1000);
+    },
 
   }
 }
@@ -300,6 +352,39 @@ export default {
 
            .event-contents-wrapper{
              margin-bottom: 6px;
+           }
+
+           .event-prefecture-wrapper.event-contents-wrapper{
+             position: relative;
+             display: inline-block;
+             .prefecture-selectbox{
+               width: 100%;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+             }
+             .prefecture-selectbox:focus{
+               outline: none;
+             }
+             select::-ms-expand {
+               display: none;
+             }
+           }
+
+           .event-prefecture-wrapper::after{
+            content: '';
+            width: 6px;
+            height: 6px;
+            border: 0px;
+            border-bottom: solid 2px #b4b3b3;
+            border-right: solid 2px #b4b3b3;
+            -ms-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+            position: absolute;
+            top: 53%;
+            right: 10px;
+            margin-top: -4px;
            }
 
            p.caption{

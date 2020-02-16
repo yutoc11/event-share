@@ -79,7 +79,7 @@
               .myevent-all-delete-wrapper.underline-link 過去のイベントを全て削除する
               .myevent-list-wrapper
                 .myevent-content-wrapper
-                  p.division 神奈川県
+                  p.prefecture 神奈川県
                   p.date 2020.4.20 (火)
                   h3.event-title 横浜ハンドメイドマルシェ2020春
                   p.position A-8
@@ -89,7 +89,8 @@
                     .delete.underline-link 削除
                     .edit.underline-link 編集
                 .no-event-wrapper
-                  p.no-ivent まだイベントが登録されていません。
+                  p.no-ivent まだ参加イベントが登録されていません。
+              event-list(:events="events")
 
         v-tab-item.event-container
           .logout
@@ -101,9 +102,11 @@
       p(v-if="$store.state.user") email： {{$store.state.user.email}}
       .test(v-if="isSetuserName")
         p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
+      .test(v-if="prefectures")
+        p {{prefectures[0].name}}
 
     section
-      artwork-modal(:val="postItem" v-if="showModal")
+      artwork-modal(:prefectures="prefectures" v-if="showModal")
 
 </template>
 
@@ -114,6 +117,8 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
+import EventList from '~/components/EventList.vue'
+import prefectures from '~/static/prefectures.json'
 import uuid from 'uuid'
 
 export default {
@@ -143,14 +148,17 @@ export default {
       username: '',
       isSetuserName: false,
       isDashbord: true,
+      isAddEvent: false,
+      events: [],
     };
   },
 
-  asyncData () {
+  asyncData ({ params }) {
     return {
       fvWidth: "",
       fvHeight: "",
       flash_message: "",
+      prefectures,
       //flash: context.query['flash'],
     };
   },
@@ -213,6 +221,23 @@ export default {
             console.log(this.coverImage)
           }
         )
+
+        db.collection('users').doc(this.user.uid).collection('events').orderBy("eventEndDate", "desc")
+           .get().then((querySnapshot) => {
+             console.log(querySnapshot)
+             console.log(querySnapshot.docs)
+             this.events = [];
+             querySnapshot.forEach((doc) => {
+                 console.log('ページ読み込み時のリスト読み取りなう');
+                 console.log(doc.data());
+                 this.events.push(doc.data())
+               }
+             );
+
+             })
+             .catch(function(error) {
+               console.log("Error getting documents: ", error);
+             });
       }
     })
 
@@ -225,6 +250,7 @@ export default {
     ArtworkModal,
     UserIcon,
     UserCover,
+    EventList,
   },
 
   methods: {
@@ -429,8 +455,32 @@ export default {
       })
     },
 
+    getEvents(){
+      console.log("getEvents")
+        const db = firebase.firestore();
+
+        db.collection('users').doc(this.$store.state.user.uid).collection('events').orderBy("eventEndDate", "desc")
+           .get().then((querySnapshot) => {
+             console.log(querySnapshot)
+             console.log(querySnapshot.docs)
+             this.events = [];
+             querySnapshot.forEach((doc) => {
+                 console.log('追加時のリスト読み取りなう');
+                 console.log(doc.data());
+                 this.events.push(doc.data())
+               }
+             );
+
+             })
+             .catch(function(error) {
+               console.log("Error getting documents: ", error);
+             });
+    }
+
   }
 }
+
+
 </script>
 
 <style lang="scss">
@@ -570,7 +620,7 @@ export default {
               margin-bottom: 4px;
             }
 
-            .division{
+            .prefecture{
               padding-left: 10px;
               text-align: left;
               font-size: 0.8rem;
@@ -706,7 +756,7 @@ export default {
           .myevent-wrapper{
 
           }
-            .division{
+            .prefecture{
 
             }
             .myevent-content-wrapper{
