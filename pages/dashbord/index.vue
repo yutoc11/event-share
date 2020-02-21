@@ -46,12 +46,18 @@
             .icon-wrapper.account-item-wrapper
               .icon.input-label アイコン設定
 
-              .icon-change-wrapper(v-if="iconImage")
-                user-icon(:iconImage="iconImage" :isDashbord="isDashbord" v-on:iconChange="imageChange")
+              .icon-unsetting-wrapper(v-if="isLoadingIcon")
+                .icon-upload-wrapper.upload-wrapper.icon-loading-wrapper
+                  .icon-loading-display-wrapper
+                    content-loader(:width="100" :height="100")
+                      circle(cx="50" cy="50" r="50")
+
+              .icon-change-wrapper(v-show="iconImage")
+                user-icon(:iconImage="iconImage" :isDashbord="isDashbord" v-on:iconChange="imageChange" @loadedIcon="loadedIcon")
                 .change-button-wrapper
                   .change-button.underline-link(v-if="iconPreviewImage" @click="fileUpload('icon')") 変更する
 
-              .icon-unsetting-wrapper(v-else)
+              .icon-unsetting-wrapper(v-if="!iconImage && !isLoadingIcon")
                 .icon-upload-wrapper.upload-wrapper
                   .icon-upload-icon-wrapper
                     i.material-icons.icon-upload-icon photo_camera
@@ -61,12 +67,16 @@
             .cover-wrapper.account-item-wrapper
               .cover-image.input-label カバー画像設定
 
-              .cover-change-wrapper(v-if="coverImage")
-                user-cover(:coverImage="coverImage" :isDashbord="isDashbord" v-on:coverChange="imageChange")
+              .cover-loading-wrapper.cover-unsetting-wrapper(v-if="isLoadingCover")
+                content-loader(:width="100" :height="52.5")
+                  rect(width="100%" height="100%")
+
+              .cover-change-wrapper(v-show="coverImage")
+                user-cover(:coverImage="coverImage" :isDashbord="isDashbord" v-on:coverChange="imageChange" @loadedCover="loadedCover")
                 .change-button-wrapper
                   .change-button.underline-link(v-if="coverPreviewImage" @click="fileUpload('cover')") 変更する
 
-              .cover-upload-wrapper.upload-wrapper(v-else)
+              .cover-unsetting-wrapper.upload-wrapper(v-if="!coverImage && !isLoadingCover")
                 .cover-upload-icon-wrapper
                   i.material-icons.cover-upload-icon photo_camera
                 input.input-file(@change="imageChange($event,'cover')" type="file")
@@ -101,6 +111,7 @@
 import firebase from '@/plugins/firebase'
 import store from '~/store/index.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
+import { ContentLoader } from 'vue-content-loader'
 import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
@@ -137,6 +148,8 @@ export default {
       isDashbord: true,
       isAddEvent: false,
       events: [],
+      isLoadingCover: true,
+      isLoadingIcon: true,
     };
   },
 
@@ -203,8 +216,14 @@ export default {
             this.userName = doc.data().userName;
             this.isSetuserName = true;
             this.iconImage = doc.data().iconUrl;
+            if(!doc.data().iconUrl){
+              this.isLoadingIcon = false;
+            }
             console.log(this.iconImage)
             this.coverImage = doc.data().coverUrl;
+            if(!doc.data().coverUrl){
+              this.isLoadingCover = false;
+            }
             console.log(this.coverImage)
           }
         )
@@ -238,6 +257,7 @@ export default {
     UserIcon,
     UserCover,
     EventList,
+    ContentLoader,
   },
 
   methods: {
@@ -462,7 +482,17 @@ export default {
              .catch(function(error) {
                console.log("Error getting documents: ", error);
              });
-    }
+    },
+
+    loadedCover(){
+      console.log(this.isLoadingCover)
+      this.isLoadingCover = false;
+    },
+
+    loadedIcon(){
+      console.log(this.isLoadingIcon)
+      this.isLoadingIcon = false;
+    },
 
   }
 }
@@ -485,6 +515,7 @@ export default {
 
   .your-url{
     font-size: 0.6rem;
+    min-height: 16px;
   }
 
   .confirm-wrapper{
@@ -702,7 +733,7 @@ export default {
   align-items: center;
 }
 
-.cover-upload-wrapper{
+.cover-unsetting-wrapper{
   position: relative;
   margin: 10px auto;
   border: 2px dotted #F0858C;
@@ -715,6 +746,25 @@ export default {
     height: 226.8px;
   }
 
+}
+
+.icon-loading-wrapper.icon-upload-wrapper,
+.cover-loading-wrapper.cover-unsetting-wrapper{
+  border: none;
+}
+
+.icon-loading-wrapper.icon-unsetting-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-loading-display-wrapper{
+  border-radius: 50%;
+  background-color: transparent;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #fff;
 }
 
 .logout{
@@ -777,7 +827,7 @@ export default {
     }
 
   }
-  .cover-upload-wrapper{
+  .cover-unsetting-wrapper{
     width: 85vw;
     height: 42vw;
 

@@ -1,7 +1,7 @@
 <template lang="pug">
 .icon-image-wrapper(v-bind:class="{ dashicon: isDashbord}")
   .icon-display-wrapper
-    img(:src="iconImage")
+    img(:src="iconImage" v-on:load="loaded")
 
 
   .icon-close(v-if="isDashbord")
@@ -17,10 +17,23 @@ export default {
 
   props:['iconImage','isDashbord'],
 
+  data(){
+    return{
+      isLoading: true,
+    };
+  },
+
   computed:{
   },
 
   methods: {
+
+    loaded(){
+      console.log(this.isLoading)
+      this.isLoading = false;
+      this.$emit('loadedIcon')
+    },
+
   }
 }
 </script>

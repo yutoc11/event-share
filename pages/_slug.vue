@@ -156,6 +156,7 @@ body{
   margin: 0 auto;
 }
 
+
 .user-icon-image-wrapper{
 
   width:100px;
@@ -199,6 +200,8 @@ body{
 .event-tab-container{
 
 }
+
+
 
 
 @media screen and (max-width: 780px) {

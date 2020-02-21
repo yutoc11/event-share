@@ -1,7 +1,10 @@
 <template lang="pug">
 .cover-image-wrapper(v-bind:class="{ dashcover: isDashbord}")
-  .cover-display-wrapper
-    img(:src="coverImage")
+  .content-loader-wrapper(v-if="isLoading")
+    content-loader(:width="100" :height="52.5")
+      rect(width="100%" height="100%")
+  .cover-display-wrapper(v-show="!isLoading")
+    img(:src="coverImage" v-on:load="loaded")
   .cover-close(v-if="isDashbord")
     i.material-icons photo_camera
   .cover-change-input(v-if="isDashbord")
@@ -9,14 +12,19 @@
 </template>
 
 <script>
-
+import { ContentLoader } from 'vue-content-loader'
 export default {
 
   props:['coverImage','isDashbord'],
 
   data(){
     return{
+      isLoading: true,
     };
+  },
+
+  components: {
+    ContentLoader,
   },
 
   computed:{
@@ -24,6 +32,11 @@ export default {
   },
 
   methods: {
+    loaded(){
+      console.log(this.isLoading)
+      this.isLoading = false;
+      this.$emit('loadedCover')
+    },
   }
 }
 </script>

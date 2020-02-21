@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app.app
-    .event-share
+    .event-share-user-pub
 
       section
         nuxt/
@@ -8,7 +8,7 @@
       section
 
 
-      footer
+      footer.user-footer
         .footer-text.center-text イベント予定ページをつくりたい方はこちら
         .footer-logo
           nuxt-link(to="/")
@@ -96,9 +96,11 @@ p{
   margin: 0 auto;
 }
 
-.event-share{
-
+.event-share-user-pub{
+  min-height: 100vh;
+  position: relative;
 }
+
 
 .event-share-button{
   width: 100%;
@@ -292,8 +294,14 @@ section{
   background-color: #F9FBFE;
 }
 
-footer{
-  padding: 4px 0;
+
+.user-footer{
+
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  padding: 8px 0;
   line-height: 18px;
   .footer-text{
     color: #F0858C;
@@ -316,4 +324,6 @@ footer{
     }
   }
 }
+
+
 </style>
