@@ -5,8 +5,10 @@
       .your-url あなたのURL
       .your-url {{ myUrl }}
       .confirm-wrapper
-        .confirm-your-url
+        .confirm-your-url(v-if="username")
           a.underline-link(:href="'https://event-share.net/'+ username" target="_blank") 自分のページを確認する
+        .confirm-your-url(v-else)
+          a.underline-link(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
         .copy-your-url(@click="copyMyUrl")
           v-icon(small) file_copy
 
@@ -270,8 +272,7 @@ export default {
     },
 
     copyMyUrl() {
-      const myEventUrl = 'https://event-share.net/'+ this.username
-
+      let myEventUrl = this.username ? 'https://event-share.net/'+ this.username : 'https://event-share.net/'+ this.$store.state.userinfo.userName;
       this.$copyText(myEventUrl)
       console.log(myEventUrl)
       //this.$parent.flash_message = "コピーしました"
