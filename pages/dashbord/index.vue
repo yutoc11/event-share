@@ -601,6 +601,10 @@ export default {
       }
     }
 
+    .cover-change-wrapper{
+      height: 265px;
+    }
+
     .cover-image-wrapper{
       .cover-image{
 

@@ -119,6 +119,40 @@ export default {
          });
   },
 
+  created: function(){
+
+    this.userId = this.$route.path.slice(1);
+    console.log(this.userId)
+    const db = firebase.firestore();
+
+    if(this.isLoadingEvents){
+      db.collection('users').where("userId", "==", this.userId)
+         .get().then((querySnapshot) => {
+           querySnapshot.forEach((doc) => {
+
+               this.isCatchData = true;
+               this.userOpenData = doc.data();
+               if(!this.userOpenData.coverUrl){
+                 this.isLoadingCover = false;
+               }
+               if(!this.userOpenData.iconUrl){
+                 this.isLoadingIcon = false;
+               }
+               console.log(this.userOpenData)
+               console.log(this.isCatchData)
+               console.log('↑キャッチしたよ！')
+               setTimeout(this.getEvents,100);
+
+             }
+           );
+
+           })
+           .catch(function(error) {
+             console.log("Error getting documents: ", error);
+           });
+    }
+  },
+
   methods: {
     loadedCover(){
       console.log(this.isLoadingCover)
