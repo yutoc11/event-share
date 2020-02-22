@@ -1,5 +1,5 @@
 <template lang="pug">
-.myevent-list-wrapper
+.myevent-list-wrapper(v-if="events.length")
   .myevent-content-wrapper(v-if="events" v-for="(event, index) in events" :key="index")
     p.prefecture {{event.prefectureName}}
     p.date(v-if="event.eventStartDate") {{formatDate(event.eventStartDate)}}〜{{formatDate(event.eventEndDate)}}
@@ -11,8 +11,8 @@
     .edit-wrapper(v-if="isDashbord")
       .delete.underline-link 削除
       .edit.underline-link 編集
-  .no-event-wrapper(v-else)
-    p.no-ivent まだイベントがありません。
+.no-event-wrapper(v-else)
+  p.no-ivent まだイベントがありません。
 </template>
 
 <script>
@@ -107,11 +107,17 @@ export default {
         }
       }
     }
+}
 
-    .no-event-wrapper{
-      padding: 16px 0;
-      margin: 0 auto;
-    }
+.no-event-wrapper{
+  padding: 32px 0 16px 0;
+  margin: 0 auto;
+  p{
+    margin-bottom: 0;
+    text-align: center;
+    letter-spacing: 1.2px;
+    font-size: 0.8rem;
+  }
 }
 
   @media screen and (max-width: 480px) {

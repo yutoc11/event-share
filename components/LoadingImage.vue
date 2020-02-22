@@ -1,6 +1,6 @@
 <template lang="pug">
 .loading-image-wrapper
-    vue-loading(type="bubbles" color="#F0858C" size="{ width: '30px', height: '30px' }")
+    vue-loading(type="bubbles" color="#F0858C" :size="{ width: '30px', height: '30px' }")
 </template>
 
 <script>

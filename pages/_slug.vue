@@ -85,7 +85,7 @@ export default {
 
   mounted: function(){
 
-
+    this.isLoadingEvents = false;
   },
 
   beforeCreate(){
