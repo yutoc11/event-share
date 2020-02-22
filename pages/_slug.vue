@@ -1,29 +1,34 @@
 <template lang="pug">
-  section.pubuser-page-container(v-if="isCatchData")
-    section.user-info-wrapper
-      .user-cover-image-wrapper
-        user-cover(:coverImage="userOpenData.coverUrl" @loadedCover="loadedCover")
-      .user-icon-image-wrapper
-        .user-icon-image
-          user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
+  section
+    .no-catchdata-wrapper(v-if="!isCatchData")
+      loading-image
+    .pubuser-page-container(v-show="isCatchData")
+      section.user-info-wrapper
+        .user-cover-image-wrapper
+          user-cover(:coverImage="userOpenData.coverUrl" @loadedCover="loadedCover")
+        .user-icon-image-wrapper
+          .user-icon-image
+            user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
 
-      .username-wrapper
-        h3 {{userName}}
-      .myevent-store-wrapper
-        .store-info-label 販売情報
+        .username-wrapper
+          h3 {{userName}}
+        .myevent-store-wrapper
+          .store-info-label 販売情報
 
-    section.event-info-wrapper
-      v-tabs.event-tab-wrapper(v-model="tab" background-color="transparent" color="#F0858C" grow)
-        v-tab これから
-        v-tab 今まで
+      section.event-info-wrapper
+        v-tabs.event-tab-wrapper(v-model="tab" background-color="transparent" color="#F0858C" grow)
+          v-tab これから
+          v-tab 今まで
 
-      v-tabs-items.event-tab-container(v-model="tab")
+        v-tabs-items.event-tab-container(v-model="tab")
 
-        v-tab-item.future-store-container
-          event-list(:events="futureEvents")
+          v-tab-item.future-store-container
+            loading-image(v-if="isLoadingEvents")
+            event-list(v-show="!isLoadingEvents" :events="futureEvents")
 
-        v-tab-item.previous-store-container
-          event-list(:events="pastEvents")
+          v-tab-item.previous-store-container
+            loading-image(v-if="isLoadingEvents")
+            event-list(v-show="!isLoadingEvents" :events="pastEvents")
 
 
 </template>
@@ -36,6 +41,7 @@ import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
 import EventList from '~/components/EventList.vue'
+import LoadingImage from '~/components/LoadingImage.vue'
 import { ContentLoader } from 'vue-content-loader'
 import uuid from 'uuid'
 
@@ -61,6 +67,7 @@ export default {
       pastEvents: [],
       isLoadingIcon: true,
       isLoadingCover: true,
+      isLoadingEvents: true,
     };
   },
 
@@ -69,6 +76,7 @@ export default {
     UserCover,
     EventList,
     ContentLoader,
+    LoadingImage,
   },
 
   computed:{
@@ -139,6 +147,7 @@ export default {
                  console.log('追加時のリスト読み取りなう');
                  console.log(doc.data());
                  this.futureEvents.push(doc.data())
+                 this.isLoadingEvents = false;
                }
              );
 
@@ -158,6 +167,7 @@ export default {
                   console.log('追加時のリスト読み取りなう');
                   console.log(doc.data());
                   this.pastEvents.push(doc.data())
+                  this.isLoadingEvents = false;
                 }
               );
 
@@ -175,6 +185,14 @@ export default {
 body{
   max-width: 432px;
   margin: 0 auto;
+}
+
+.no-catchdata-wrapper{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
