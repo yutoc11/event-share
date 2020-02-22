@@ -1,16 +1,19 @@
 <template lang="pug">
   section.event-container
 
-    section.your-url-wrapper
-      .your-url あなたのURL
-      .your-url {{ myUrl }}
-      .confirm-wrapper
-        .confirm-your-url(v-if="username")
-          a.underline-link(:href="'https://event-share.net/'+ username" target="_blank") 自分のページを確認する
-        .confirm-your-url(v-else)
-          a.underline-link(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
-        .copy-your-url(@click="copyMyUrl")
-          v-icon(small) file_copy
+    section
+      .your-url-wrapper(v-if="!isSetuserData")
+        loading-image
+      .your-url-wrapper(v-show="isSetuserData")
+        .your-url あなたのURL
+        .your-url {{ myUrl }}
+        .confirm-wrapper(v-show="isSetuserData")
+          .confirm-your-url(v-if="username")
+            a.underline-link(:href="'https://event-share.net/'+ username" target="_blank") 自分のページを確認する
+          .confirm-your-url(v-else-if="isSetuserData")
+            a.underline-link(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
+          .copy-your-url(@click="copyMyUrl")
+            v-icon(small) file_copy
 
     section.setting-wrapper
       v-tabs(v-model="tab" background-color="transparent" color="#F0858C" grow)
@@ -40,7 +43,7 @@
                 .user-name.input-label ユーザー名
                 .change-button-wrapper
                   .change-button.underline-link(@click="isEditName = true") 編集する
-              .username-display(v-if="isSetuserName")
+              .username-display(v-if="isSetuserData")
                 p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
                 p(v-else-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
 
@@ -99,7 +102,7 @@
     section.test
       nuxt-link(to="/") トップへ
       p(v-if="$store.state.user") email： {{$store.state.user.email}}
-      .test(v-if="isSetuserName")
+      .test(v-if="isSetuserData")
         p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
       .test(v-if="prefectures")
         p {{prefectures[0].name}}
@@ -118,6 +121,7 @@ import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
 import EventList from '~/components/EventList.vue'
+import LoadingImage from '~/components/LoadingImage.vue'
 import prefectures from '~/static/prefectures.json'
 import uuid from 'uuid'
 
@@ -146,7 +150,7 @@ export default {
       coverPreviewImage: false,
       isChangeUserData: false,
       username: '',
-      isSetuserName: false,
+      isSetuserData: false,
       isDashbord: true,
       isAddEvent: false,
       events: [],
@@ -172,7 +176,7 @@ export default {
     ...mapGetters(['isAuthenticated']),
 
     myUrl: function () {
-      if(this.isSetuserName){
+      if(this.isSetuserData){
         if(this.$store.state.userinfo.userName){
           let myUrl = 'https://event-share.net/' + this.$store.state.userinfo.userName;
           console.log("this.$store.state.userinfo.userName")
@@ -216,7 +220,7 @@ export default {
             console.log(doc.data());
             this.setUserInfo(doc.data());
             this.userName = doc.data().userName;
-            this.isSetuserName = true;
+            this.isSetuserData = true;
             this.iconImage = doc.data().iconUrl;
             if(!doc.data().iconUrl){
               this.isLoadingIcon = false;
@@ -260,6 +264,7 @@ export default {
     UserCover,
     EventList,
     ContentLoader,
+    LoadingImage,
   },
 
   methods: {
@@ -513,6 +518,7 @@ export default {
   padding: 12px 0;
   border-radius: 10px;
   margin-bottom: 10px;
+  height: 91px;
 
   .your-url{
     font-size: 0.6rem;

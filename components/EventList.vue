@@ -1,28 +1,49 @@
 <template lang="pug">
-.myevent-list-wrapper(v-if="events.length")
-  .myevent-content-wrapper(v-if="events" v-for="(event, index) in events" :key="index")
-    p.prefecture {{event.prefectureName}}
-    p.date(v-if="event.eventStartDate") {{formatDate(event.eventStartDate)}}〜{{formatDate(event.eventEndDate)}}
-    p.date(v-else) {{formatDate(event.eventEndDate)}}
-    h3.event-title {{event.eventTitle}}
-    p.position {{event.booth}}
-    p.booth-name {{event.shopName}}
-    a.oficial-link.underline-link(:href="event.eventURL") 公式HPでみる
-    .edit-wrapper(v-if="isDashbord")
-      .delete.underline-link 削除
-      .edit.underline-link 編集
-.no-event-wrapper(v-else)
-  p.no-ivent まだイベントがありません。
+.myevent-component-wrapper
+
+  .myevent-list-wrapper(v-if="events.length")
+    .myevent-content-wrapper(v-if="events" v-for="(event, index) in events" :key="index")
+      p.prefecture {{event.prefectureName}}
+      p.date(v-if="event.eventStartDate") {{formatDate(event.eventStartDate)}}〜{{formatDate(event.eventEndDate)}}
+      p.date(v-else) {{formatDate(event.eventEndDate)}}
+      h3.event-title {{event.eventTitle}}
+      p.position {{event.booth}}
+      p.booth-name {{event.shopName}}
+      a.oficial-link.underline-link(:href="event.eventURL") 公式HPでみる
+      .edit-wrapper(v-if="isDashbord")
+        .delete.underline-link 削除
+        .edit.underline-link(@click="openEventEditModal()") 編集
+        
+  .no-event-wrapper(v-else)
+    p.no-ivent まだイベントがありません。
+
+  section
+    event-edit-modal(v-if="showEventEditModal")
+
 </template>
 
 <script>
+import EventEditModal from '~/components/EventEditModal.vue'
 
 export default {
   props:['events','isDashbord'],
 
+  head () {
+    return {
+      bodyAttrs: {
+        class: this.showEventEditModal ? 'modal-body' : ''
+      }
+    }
+  },
+
   data(){
     return{
+      showEventEditModal: false,
     };
+  },
+
+  components:{
+    EventEditModal,
   },
 
   computed:{
@@ -37,11 +58,19 @@ export default {
       const dd = new String(date.getDate()).padStart(2, "0")
       return `${yyyy}-${mm}-${dd}`
     },
+
+    openEventEditModal(event) {
+      this.showEventEditModal = true;
+    },
   }
 }
 </script>
 
 <style lang="scss">
+
+.modal-body {
+  overflow-y: hidden;
+}
 
 .myevent-list-wrapper{
 
