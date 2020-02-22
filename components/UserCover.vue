@@ -1,10 +1,13 @@
 <template lang="pug">
 .cover-image-wrapper(v-bind:class="{ dashcover: isDashbord}")
-  .content-loader-wrapper(v-if="isLoading")
+  .content-loader-wrapper(v-if="isLoading && coverImage")
     content-loader(:width="100" :height="52.5")
       rect(width="100%" height="100%")
-  .cover-display-wrapper(v-show="!isLoading")
+  .cover-display-wrapper(v-show="!isLoading && coverImage")
     img(:src="coverImage" v-on:load="loaded")
+  .cover-display-wrapper(v-if="!coverImage")
+    img(src="~assets/images/default_icon.png")
+
   .cover-close(v-if="isDashbord")
     i.material-icons photo_camera
   .cover-change-input(v-if="isDashbord")

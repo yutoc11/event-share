@@ -1,8 +1,14 @@
 <template lang="pug">
 .icon-image-wrapper(v-bind:class="{ dashicon: isDashbord}")
-  .icon-display-wrapper
-    img(:src="iconImage" v-on:load="loaded")
 
+  .icon-display-wrapper(v-if="isLoading && iconImage")
+    .icon-loading-display-wrapper
+      content-loader(:width="100" :height="100")
+        circle(cx="50" cy="50" r="50")
+  .icon-display-wrapper(v-show="!isLoading && iconImage")
+    img(:src="iconImage" v-on:load="loaded")
+  .icon-display-wrapper(v-if="!iconImage")
+    img(src="~assets/images/default_icon.png")
 
   .icon-close(v-if="isDashbord")
     i.material-icons photo_camera
@@ -12,7 +18,7 @@
 </template>
 
 <script>
-
+import { ContentLoader } from 'vue-content-loader'
 export default {
 
   props:['iconImage','isDashbord'],
@@ -20,7 +26,12 @@ export default {
   data(){
     return{
       isLoading: true,
+      isLoadingIcon: true,
     };
+  },
+
+  components: {
+    ContentLoader,
   },
 
   computed:{
@@ -65,7 +76,16 @@ export default {
     width: 100px;
     height: 100px;
   }
+  .icon-loading-display-wrapper{
+    border-radius: 50%;
+    background-color: transparent;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #fff;
+  }
 }
+
+
 
 .dashicon{
   .icon-display-wrapper{

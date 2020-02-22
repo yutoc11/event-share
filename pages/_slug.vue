@@ -2,10 +2,11 @@
   section.pubuser-page-container(v-if="isCatchData")
     section.user-info-wrapper
       .user-cover-image-wrapper
-        user-cover(:coverImage="userOpenData.coverUrl")
+        user-cover(:coverImage="userOpenData.coverUrl" @loadedCover="loadedCover")
       .user-icon-image-wrapper
         .user-icon-image
-          user-icon(:iconImage="userOpenData.iconUrl")
+          user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
+
       .username-wrapper
         h3 {{userName}}
       .myevent-store-wrapper
@@ -35,6 +36,7 @@ import ArtworkModal from '~/components/ArtworkModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
 import EventList from '~/components/EventList.vue'
+import { ContentLoader } from 'vue-content-loader'
 import uuid from 'uuid'
 
 export default {
@@ -57,6 +59,8 @@ export default {
       tab: null,
       futureEvents: [],
       pastEvents: [],
+      isLoadingIcon: true,
+      isLoadingCover: true,
     };
   },
 
@@ -64,6 +68,7 @@ export default {
     UserIcon,
     UserCover,
     EventList,
+    ContentLoader,
   },
 
   computed:{
@@ -86,6 +91,12 @@ export default {
 
              this.isCatchData = true;
              this.userOpenData = doc.data();
+             if(!this.userOpenData.coverUrl){
+               this.isLoadingCover = false;
+             }
+             if(!this.userOpenData.iconUrl){
+               this.isLoadingIcon = false;
+             }
              console.log(this.userOpenData)
              console.log(this.isCatchData)
              console.log('↑キャッチしたよ！')
@@ -101,6 +112,16 @@ export default {
   },
 
   methods: {
+    loadedCover(){
+      console.log(this.isLoadingCover)
+      this.isLoadingCover = false;
+    },
+
+    loadedIcon(){
+      console.log(this.isLoadingIcon)
+      this.isLoadingIcon = false;
+    },
+
     getEvents(){
       console.log("getEvents")
         const db = firebase.firestore();
@@ -166,6 +187,13 @@ body{
     position: absolute;
     top: -50px;
     margin: 0 auto;
+    .icon-loading-display-wrapper{
+      border-radius: 50%;
+      background-color: transparent;
+      width: 100px;
+      height: 100px;
+      border: 1px solid #fff;
+    }
   }
 }
 
