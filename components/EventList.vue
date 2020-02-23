@@ -12,21 +12,24 @@
       a.oficial-link.underline-link(:href="event.eventURL") 公式HPでみる
       .edit-wrapper(v-if="isDashbord")
         .delete.underline-link 削除
-        .edit.underline-link(@click="openEventEditModal()") 編集
-        
+        .edit.underline-link(@click="openEventEditModaltest(event)") 編集
+
   .no-event-wrapper(v-else)
     p.no-ivent まだイベントがありません。
 
   section
-    event-edit-modal(v-if="showEventEditModal")
+    event-edit-modal(:editableEvent="event" :prefectures="prefectures" v-if="showEventEditModal")
+
+
 
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
 import EventEditModal from '~/components/EventEditModal.vue'
 
 export default {
-  props:['events','isDashbord'],
+  props:['prefectures','events','isDashbord'],
 
   head () {
     return {
@@ -39,6 +42,7 @@ export default {
   data(){
     return{
       showEventEditModal: false,
+      event,
     };
   },
 
@@ -60,7 +64,36 @@ export default {
     },
 
     openEventEditModal(event) {
+      this.event = event;
+      console.log(this.event)
       this.showEventEditModal = true;
+    },
+
+    openEventEditModaltest(event) {
+      this.$emit('openingEventEditModal',event)
+    },
+
+    //記述被ってるのでそのうち整理して消す
+    getEvents(){
+      console.log("getEvents")
+        const db = firebase.firestore();
+
+        db.collection('users').doc(this.$store.state.user.uid).collection('events').orderBy("eventEndDate", "desc")
+           .get().then((querySnapshot) => {
+             console.log(querySnapshot)
+             console.log(querySnapshot.docs)
+             this.events = [];
+             querySnapshot.forEach((doc) => {
+                 console.log('追加時のリスト読み取りなう');
+                 console.log(doc.data());
+                 this.events.push(doc.data())
+               }
+             );
+
+             })
+             .catch(function(error) {
+               console.log("Error getting documents: ", error);
+             });
     },
   }
 }

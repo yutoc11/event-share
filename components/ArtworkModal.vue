@@ -116,8 +116,7 @@ export default {
       //日付設定をDate型へ変換する文字列に変換
       let endDateStr = (eventData.eventDates[0] != null) ? `${eventData.eventDates[0]}T00:00:00+09:00` : '';
       let startDateStr = (eventData.eventDates[1] != null) ? `${eventData.eventDates[1]}T00:00:00+09:00` : '';
-      //let startDateStr = `${eventData.eventDates[0]}T00:00:00+09:00`;
-      //let endDateStr = `${eventData.eventDates[1]}T00:00:00+09:00`;
+
       //日付を表す数値に変換
       let startDate = Date.parse(startDateStr);
       let endDate = Date.parse(endDateStr);
@@ -147,6 +146,7 @@ export default {
           //期間が1日でで入力されている場合
           db.collection("users").doc(userId).collection("events").doc(fileName).set({
             eventType: 'store',
+            eventId: fileName,
             eventTitle: eventData.eventTitle,
             prefectureCode: prefecture.code,
             prefectureName: prefecture.name,
@@ -156,11 +156,10 @@ export default {
             comment: eventData.comment,
             eventEndDate: firebase.firestore.Timestamp.fromDate(new Date(endDateStr)),
             }, { merge: true })
-            .then(
-              function() {
-                console.log("変更成功");
-              }
-            ).catch(
+            .then(() =>{
+              this.$parent.getEvents(),
+              console.log("変更成功");
+            }).catch(
               function(error) {
                 console.error("Error adding document: ", error);
               }
@@ -169,6 +168,7 @@ export default {
           //期間が終わりと始まりで入力されている場合
           db.collection("users").doc(userId).collection("events").doc(fileName).set({
             eventType: 'store',
+            eventId: fileName,
             eventTitle: eventData.eventTitle,
             prefectureCode: prefecture.code,
             prefectureName: prefecture.name,
@@ -179,11 +179,10 @@ export default {
             eventStartDate: firebase.firestore.Timestamp.fromDate(new Date(startDateStr)),
             eventEndDate: firebase.firestore.Timestamp.fromDate(new Date(endDateStr)),
             }, { merge: true })
-            .then(
-              function() {
-                console.log("変更成功");
-              }
-            ).catch(
+            .then(() =>{
+              this.$parent.getEvents(),
+              console.log("変更成功");
+            }).catch(
               function(error) {
                 console.error("Error adding document: ", error);
               }
@@ -193,7 +192,6 @@ export default {
       }
       this.$parent.isAddEvent = true;
       this.$parent.showModal = false;
-      setTimeout(this.$parent.getEvents,1000);
     },
 
   }

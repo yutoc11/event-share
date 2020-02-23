@@ -92,7 +92,7 @@
             .myevent-divider
             .myevent-wrapper
               .myevent-all-delete-wrapper.underline-link 過去のイベントを全て削除する
-              event-list(:events="events" :isDashbord="isDashbord")
+              event-list(:prefectures="prefectures" :events="events" :isDashbord="isDashbord" @openingEventEditModal="openingEventEditModal")
 
         v-tab-item.event-container
           .logout
@@ -110,6 +110,9 @@
     section
       artwork-modal(:prefectures="prefectures" v-if="showModal")
 
+    section
+      event-edit-modal(:editableEvent="event" :prefectures="prefectures" v-if="showEventEditModal")
+
 </template>
 
 <script>
@@ -118,6 +121,7 @@ import store from '~/store/index.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { ContentLoader } from 'vue-content-loader'
 import ArtworkModal from '~/components/ArtworkModal.vue'
+import EventEditModal from '~/components/EventEditModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
 import EventList from '~/components/EventList.vue'
@@ -131,7 +135,8 @@ export default {
   head () {
     return {
       bodyAttrs: {
-        class: this.showModal ? 'modal-body' : ''
+        class: this.showModal ? 'modal-body' : '',
+        class: this.showEventEditModal ? 'modal-body' : '',
       }
     }
   },
@@ -140,6 +145,7 @@ export default {
     return{
       tab: null,
       showModal: false,
+      showEventEditModal: false,
       postItem: '',
       isEditName: false,
       uuid: '',
@@ -260,6 +266,7 @@ export default {
 
   components: {
     ArtworkModal,
+    EventEditModal,
     UserIcon,
     UserCover,
     EventList,
@@ -488,6 +495,13 @@ export default {
              .catch(function(error) {
                console.log("Error getting documents: ", error);
              });
+    },
+
+    openingEventEditModal(event){
+      console.log("エディット開きたい！")
+      console.log(event)
+      this.event = event;
+      this.showEventEditModal = true;
     },
 
     loadedCover(){
