@@ -1,13 +1,13 @@
 <template lang="pug">
 .icon-image-wrapper(v-bind:class="{ dashicon: isDashbord}")
 
-  .icon-display-wrapper(v-if="isLoading && iconImage")
+  .icon-display-wrapper(v-if="isLoading && iconImage && !isDashbord")
     .icon-loading-display-wrapper
       content-loader(:width="100" :height="100")
         circle(cx="50" cy="50" r="50")
   .icon-display-wrapper(v-show="!isLoading && iconImage")
     img(:src="iconImage" v-on:load="loaded")
-  .icon-display-wrapper(v-if="!iconImage")
+  .icon-display-wrapper(v-if="!isLoading && !iconImage")
     img(src="~assets/images/default_icon.png")
 
   .icon-close(v-if="isDashbord")
