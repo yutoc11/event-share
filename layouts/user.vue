@@ -9,7 +9,7 @@
 
 
       footer.user-footer
-        .footer-text.center-text イベント予定ページをつくりたい方はこちら
+        .footer-text.center-text あなたのページをつくりたい方はこちら
         .footer-logo
           nuxt-link(to="/")
             img(src="~/assets/images/logo.png")
@@ -265,7 +265,7 @@ textarea:focus{
   border-radius: 6px;
   margin: 16px auto;
   text-align: center;
-  color: #565656;
+  color: #fff;
 }
 
 .tomypage-button:hover,

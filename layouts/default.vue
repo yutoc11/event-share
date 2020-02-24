@@ -262,7 +262,8 @@ textarea:focus{
   border-radius: 6px;
   margin: 16px auto;
   text-align: center;
-  color: #565656;
+  color: #fff;
+  font-weight: bold;
 }
 
 .tomypage-button:hover,

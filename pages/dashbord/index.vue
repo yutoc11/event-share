@@ -88,11 +88,17 @@
 
         v-tab-item.event-container
           .myevent-tab-wrapper
-            .myevent-add-wrapper.event-share-button(@click="openModal()") イベントの予定を追加する
+            .myevent-add-wrapper.common-button(@click="openModal()") イベントの予定を追加する
             .myevent-divider
             .myevent-wrapper
-              .myevent-all-delete-wrapper.underline-link 過去のイベントを全て削除する
-              event-list(:prefectures="prefectures" :events="events" :isDashbord="isDashbord" @openingEventEditModal="openingEventEditModal")
+              .myevent-all-delete-wrapper.underline-link(@click="openPastDeleteModal") 過去のイベントを全て削除する
+              event-list(
+                :prefectures="prefectures"
+                :events="events"
+                :isDashbord="isDashbord"
+                @openingEventEditModal="openingEventEditModal"
+                @openingEventDeleteModal="openingEventDeleteModal"
+                )
 
         v-tab-item.event-container
           .logout
@@ -113,6 +119,15 @@
     section
       event-edit-modal(:editableEvent="event" :prefectures="prefectures" v-if="showEventEditModal")
 
+    section
+      event-delete-modal(
+        v-if="showEventDeleteModal"
+        :pastDelete="pastDelete"
+        :deleteEvent="event"
+        :deletedPastEvents="deletedPastEvents"
+        @deletePastEvents="deletePastEvents"
+        @reloadEvents="reloadEvents")
+
 </template>
 
 <script>
@@ -122,6 +137,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { ContentLoader } from 'vue-content-loader'
 import ArtworkModal from '~/components/ArtworkModal.vue'
 import EventEditModal from '~/components/EventEditModal.vue'
+import EventDeleteModal from '~/components/EventDeleteModal.vue'
 import UserIcon from '~/components/UserIcon.vue'
 import UserCover from '~/components/UserCover.vue'
 import EventList from '~/components/EventList.vue'
@@ -137,6 +153,7 @@ export default {
       bodyAttrs: {
         class: this.showModal ? 'modal-body' : '',
         class: this.showEventEditModal ? 'modal-body' : '',
+        class: this.showEventDeleteModal ? 'modal-body' : '',
       }
     }
   },
@@ -146,6 +163,7 @@ export default {
       tab: null,
       showModal: false,
       showEventEditModal: false,
+      showEventDeleteModal: false,
       postItem: '',
       isEditName: false,
       uuid: '',
@@ -162,6 +180,9 @@ export default {
       events: [],
       isLoadingCover: true,
       isLoadingIcon: true,
+      pastDelete: false,
+      deletedPastEvents: false,
+      event: '',
     };
   },
 
@@ -267,6 +288,7 @@ export default {
   components: {
     ArtworkModal,
     EventEditModal,
+    EventDeleteModal,
     UserIcon,
     UserCover,
     EventList,
@@ -504,6 +526,13 @@ export default {
       this.showEventEditModal = true;
     },
 
+    openingEventDeleteModal(event){
+      console.log("デリート確認開きたい！")
+      console.log(event)
+      this.event = event;
+      this.showEventDeleteModal = true;
+    },
+
     loadedCover(){
       console.log(this.isLoadingCover)
       this.isLoadingCover = false;
@@ -514,7 +543,45 @@ export default {
       this.isLoadingIcon = false;
     },
 
+    openPastDeleteModal(){
+      this.pastDelete = true;
+      this.showEventDeleteModal = true;
+    },
+
+    deletePastEvents(){
+      console.log('deleteEventなう');
+
+      //firestoreに登録
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+
+      let now = new Date();
+
+      if( userId != null){
+        let query = db.collection("users").doc(userId).collection("events").where('eventEndDate', '<', now)
+        console.log(query)
+        query.get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log(doc)
+            doc.ref.delete();
+            this.deletedPastEvents = true;
+          });
+        }).catch(
+          function(error) {
+            console.error("Error adding document: ", error);
+          }
+        );
+      }
+
+    },
+
+    reloadEvents(){
+      this.getEvents();
+    }
+
   }
+
 }
 
 
@@ -639,6 +706,11 @@ export default {
     .myevent-add-wrapper{
 
 
+    }
+
+    .myevent-add-wrapper.common-button{
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .myevent-divider{
