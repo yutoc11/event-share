@@ -1,17 +1,46 @@
 <template lang="pug">
   section
-    .no-catchdata-wrapper(v-if="!isCatchData")
+    .no-catchdata-wrapper(v-if="!isCatchData && !passUserName && !passUserId")
       loading-image
+    .no-user-wrapper(v-else-if="!isCatchData && passUserName && passUserId")
+      .no-user-message(v-if="isLoadingPage")
+        loading-image
+      //.no-user-message(v-else)
+        p 申し訳ございません！<br>お探しのページは存在しません。
+
     .pubuser-page-container(v-show="isCatchData")
       section.user-info-wrapper
         .user-cover-image-wrapper
           user-cover(:coverImage="userOpenData.coverUrl" @loadedCover="loadedCover")
-        .user-icon-image-wrapper
-          .user-icon-image
-            user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
 
-        .username-wrapper
-          h3 {{userName}}
+        .user-icon-name-display-wrapper
+          .user-icon-name-wrapper
+            .user-icon-image-wrapper
+              .user-icon-image
+                user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
+            .username-display-wrapper
+              .username-wrapper
+                h3 {{userName}}
+        .relative-link-list-wrapper
+          .relative-link-wrapper
+            .content-wrapper
+              .content-img
+                img(src="~/assets/images/twitter.png")
+            .content-wrapper
+              .content-img
+                img(src="~/assets/images/instagram.png")
+            .content-wrapper
+              .content-img
+                img(src="~/assets/images/minne_appicon.png")
+            .content-wrapper
+              .content-img
+                img(src="~/assets/images/base_icon.png")
+            .content-wrapper
+              .content-img
+                img(src="~/assets/images/twitter.png")
+            .content-wrapper
+              .content-img
+                img(src="~/assets/images/facebook.png")
         .myevent-store-wrapper
           .store-info-label 販売情報
 
@@ -60,7 +89,9 @@ export default {
     return{
       userOpenData: '',
       isSetuserName: false,
-      isCatchData : false,
+      isCatchData: false,
+      passUserName: false,
+      passUserId: false,
       isDashbord: false,
       tab: null,
       futureEvents: [],
@@ -68,6 +99,7 @@ export default {
       isLoadingIcon: true,
       isLoadingCover: true,
       isLoadingEvents: true,
+      isLoadingPage: true,
     };
   },
 
@@ -85,16 +117,22 @@ export default {
 
   mounted: function(){
 
+    this.isLoadingPage = false;
+    console.log("isLoadingPage")
+    console.log(this.isLoadingPage)
+
     this.isLoadingEvents = false;
+
   },
 
-  beforeCreate(){
+  created: function(){
     this.userName = this.$route.path.slice(1);
     console.log(this.userName)
     const db = firebase.firestore();
 
     db.collection('users').where("userName", "==", this.userName)
        .get().then((querySnapshot) => {
+
          querySnapshot.forEach((doc) => {
 
              this.isCatchData = true;
@@ -114,12 +152,16 @@ export default {
          );
 
          })
-         .catch(function(error) {
+          .catch(
+            this.passUserName = true,
+            console.log(this.passUserName),
+           function(error) {
+
            console.log("Error getting documents: ", error);
          });
   },
 
-  created: function(){
+  beforeMount: function(){
 
     this.userId = this.$route.path.slice(1);
     console.log(this.userId)
@@ -146,8 +188,12 @@ export default {
              }
            );
 
-           })
-           .catch(function(error) {
+           }).catch(
+
+             this.passUserId = true,
+
+             function(error) {
+
              console.log("Error getting documents: ", error);
            });
     }
@@ -162,6 +208,12 @@ export default {
     loadedIcon(){
       console.log(this.isLoadingIcon)
       this.isLoadingIcon = false;
+    },
+
+    loadedPage(){
+      this.isLoadingPage = false;
+      console.log("isLoadingPage")
+      console.log(this.isLoadingPage)
     },
 
     getEvents(){
@@ -209,6 +261,7 @@ export default {
               .catch(function(error) {
                 console.log("Error getting documents: ", error);
               });
+
     }
   }
 }
@@ -229,15 +282,34 @@ body{
   align-items: center;
 }
 
+.no-user-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  font-size: 0.8rem;
+  p{
+    margin-bottom: 0;
+  }
+}
+
+.user-icon-name-display-wrapper{
+  position: relative;
+}
+
+.user-icon-name-wrapper{
+  position: absolute;
+  top: -50px;
+  left: 15px;
+}
 
 .user-icon-image-wrapper{
 
   width:100px;
   margin: 0 auto;
-  position: relative;
   .user-icon-image{
-    position: absolute;
-    top: -50px;
     margin: 0 auto;
     .icon-loading-display-wrapper{
       border-radius: 50%;
@@ -249,36 +321,78 @@ body{
   }
 }
 
-.username-wrapper{
-  margin-top: 50px;
-  h3{
-    font-size: 1rem;
-    font-weight: bold;
-    color: #A7A7A7;
+.username-display-wrapper{
+  width:100px;
+  margin: 0 auto;
+  .username-wrapper{
+    text-align: center;
+    h3{
+      font-size: 1rem;
+      font-weight: bold;
+      color: #A7A7A7;
+    }
+  }
+}
+
+.relative-link-list-wrapper{
+  height: 70px;
+  margin-left: 95px;
+  padding-left:20px;
+}
+
+.relative-link-wrapper{
+  display:flex;
+  padding: 8px 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  .content-wrapper{
+    margin:0 8px 0 0;
+    cursor: pointer;
+    //background-color: #ccc;
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+
+    .content-img{
+      background-color: #fff;
+      border-radius: 30px;
+      width: 30px;
+      height: 30px;
+      img{
+        border-radius: 30px;
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+      }
+    }
+
+  }
+
+  .content-wrapper:hover{
+    transform: scale(1.04,1.04);
+    transition-duration: 0.25s;
   }
 }
 
 
-.username-wrapper{
-  text-align: center;
-}
-
 .store-info-label{
   text-align: center;
   padding: 10px 0 0;
+  margin-bottom: 4px;
   font-size: 0.7rem;
   font-weight: bold;
   color: #565656;
 }
 .event-info-wrapper{
-  padding: 12px;
+  padding: 0 12px 12px 12px;
   //min-height: 100vw;
   .event-tab-wrapper{
     margin-bottom: 10px;
   }
 }
 .event-tab-container{
-
+  margin-bottom: 78px;
 }
 
 

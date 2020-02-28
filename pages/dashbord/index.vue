@@ -25,27 +25,28 @@
 
         v-tab-item.event-container
           .account-tab-wrapper
-            .user-name-wrapper.account-item-wrapper(v-if="isEditName")
-              .user-name-edit
-                .user-name.input-label ユーザー名
-                .change-button-wrapper
-                  .cancel-button.underline-link(@click="isEditName = false") キャンセル
-                  .name-change-button.change-button.underline-link(@click="usernameChange") 変更する
-              input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
-            .user-name-wrapper.account-item-wrapper(v-else-if="username")
-              .user-name-edit
-                .user-name.input-label ユーザー名
-                .change-button-wrapper
-                  .change-button.underline-link(@click="isEditName = true") 編集する
-              p(v-if="username") {{ username }}
-            .user-name-wrapper.account-item-wrapper(v-else)
-              .user-name-edit
-                .user-name.input-label ユーザー名
-                .change-button-wrapper
-                  .change-button.underline-link(@click="isEditName = true") 編集する
-              .username-display(v-if="isSetuserData")
-                p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
-                p(v-else-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper(v-if="isEditName")
+                .user-input-edit
+                  .input-label ユーザー名
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="isEditName = false") キャンセル
+                    .name-change-button.change-button.underline-link(@click="usernameChange") 変更する
+                input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
+              .user-input-wrapper.account-item-wrapper(v-else-if="username")
+                .user-input-edit
+                  .input-label ユーザー名
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditName = true") 編集する
+                p(v-if="username") {{ username }}
+              .user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label ユーザー名
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditName = true") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
+                  p(v-else-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
 
 
             .icon-wrapper.account-item-wrapper
@@ -85,6 +86,33 @@
                 .cover-upload-icon-wrapper
                   i.material-icons.cover-upload-icon photo_camera
                 input.input-file(@change="imageChange($event,'cover')" type="file")
+
+
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper(v-if="isEditInstaName")
+                .user-input-edit
+                  .input-label Instagramユーザー名
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="isEditInstaName = false") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userInstaNameChange") 変更する
+                input(v-model="userInstaName" type="text" name="userInstaName" placeholder="event_share" autocomplete="off").input-area
+              .user-input-wrapper.account-item-wrapper(v-else-if="userInstaName")
+                .user-input-edit
+                  .input-label Instagramユーザー名
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditInstaName = true") 編集する
+                p(v-if="userInstaName") {{ userInstaName }}
+                p(v-else) 未設定
+              .user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label Instagramユーザー名
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditInstaName = true") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userInstaName") {{ $store.state.userinfo.userInstaName }}
+                  p(v-else) 未設定
+
+
 
         v-tab-item.event-container
           .myevent-tab-wrapper
@@ -166,6 +194,9 @@ export default {
       showEventDeleteModal: false,
       postItem: '',
       isEditName: false,
+      username: '',
+      isEditInstaName: false,
+      userInstaName: '',
       uuid: '',
       invalid: false,
       iconImage: '',
@@ -173,7 +204,6 @@ export default {
       iconPreviewImage: false,
       coverPreviewImage: false,
       isChangeUserData: false,
-      username: '',
       isSetuserData: false,
       isDashbord: true,
       isAddEvent: false,
@@ -449,6 +479,32 @@ export default {
       this.isEditName = false;
     },
 
+    userInstaNameChange(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userInstaName = this.userInstaName;
+      console.log(userInstaName);
+
+      if(userInstaName != null){
+        this.$store.state.userinfo.userInstaName = userInstaName;
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userInstaName: userInstaName,
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.isEditInstaName = false;
+    },
+
     userSetting(){
       const db = firebase.firestore();
       const userId = this.$store.state.user.uid;
@@ -650,24 +706,25 @@ export default {
     .account-item-wrapper{
       margin-bottom: 10px;
     }
+    .user-input-item-wrapper{
 
-    .user-name-wrapper{
-      min-height: 55px;
-        .user-name{
+      .user-input-wrapper{
+        min-height: 55px;
 
-        }
+          .user-input-edit{
+            display: flex;
+            justify-content: space-between;
+          }
 
-        .user-name-edit{
-          display: flex;
-          justify-content: space-between;
-        }
+          p{
+            padding-left: 10px;
+            font-size: 0.8rem;
+            margin: 4px 0 0 0.5px;
+          }
+      }
 
-        p{
-          padding-left: 10px;
-          font-size: 0.8rem;
-          margin: 4px 0 0 0.5px;
-        }
     }
+
 
     .icon-unsetting-wrapper,
     .icon-change-wrapper{
@@ -876,6 +933,29 @@ export default {
 @media screen and (max-width: 480px) {
   .event-container{
 
+    .account-tab-wrapper{
+
+      .cover-unsetting-wrapper{
+        width: 85vw;
+        height: 42vw;
+
+        input.input-file{
+          width: 85vw;
+          height: 42vw;
+        }
+
+      }
+
+      .cover-upload-icon{
+        top: 17vw;
+      }
+
+      .cover-change-wrapper{
+        height: 50vw;
+      }
+
+    }
+
     .myevent-tab-wrapper{
 
       .myevent-add-wrapper{
@@ -924,20 +1004,7 @@ export default {
     }
 
   }
-  .cover-unsetting-wrapper{
-    width: 85vw;
-    height: 42vw;
 
-    input.input-file{
-      width: 85vw;
-      height: 42vw;
-    }
-
-  }
-
-  .cover-upload-icon{
-    top: 17vw;
-  }
 }
 
 
