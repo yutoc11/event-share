@@ -1,11 +1,12 @@
 <template lang="pug">
   section
-    .no-catchdata-wrapper(v-if="!isCatchData && !passUserName && !passUserId")
+    .no-catchdata-wrapper(v-if="!userOpenData")
       loading-image
-    .no-user-wrapper(v-else-if="!isCatchData && passUserName && passUserId")
-      .no-user-message(v-if="isLoadingPage")
+      p(v-if="isNoUser") 読み込み中です。<br>お探しのページは存在しない可能性がございます。<br>お手数ですが、改めてURLをお確かめください。
+    //.no-user-wrapper
+      //.no-user-message
         loading-image
-      //.no-user-message(v-else)
+      //.no-user-message
         p 申し訳ございません！<br>お探しのページは存在しません。
 
     .pubuser-page-container(v-show="isCatchData")
@@ -107,6 +108,7 @@ export default {
       isLoadingCover: true,
       isLoadingEvents: true,
       isLoadingPage: true,
+      isNoUser: false,
     };
   },
 
@@ -194,11 +196,8 @@ export default {
 
   mounted: function(){
 
-    this.isLoadingPage = false;
-    console.log("isLoadingPage")
-    console.log(this.isLoadingPage)
-
     this.isLoadingEvents = false;
+    setTimeout(this.noUser,5000);
 
   },
 
@@ -247,6 +246,11 @@ export default {
   },
 
   methods: {
+
+    noUser(){
+      this.isNoUser = true;
+    },
+
     loadedCover(){
       console.log(this.isLoadingCover)
       this.isLoadingCover = false;
@@ -327,6 +331,11 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  p{
+    font-size: 0.7rem;
+    text-align: center;
+  }
 }
 
 .no-user-wrapper{
