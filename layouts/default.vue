@@ -7,7 +7,7 @@
             img(src="~/assets/images/logo.png")
           .header-menu-list
             .header-tomypage(v-if="isAuthenticated")
-              nuxt-link.tomypage-button(to="/dashbord") マイページへ
+              a.tomypage-button(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 公開ページへ
             .header-login(v-else)
                .login-button(@click="googleLogin")
         .header-line
@@ -17,7 +17,7 @@
 
       footer.hf-bg-color
         .center-text
-          p.footer-text ©2019 event-share.
+          p.footer-text ©2020 event-share.
 </template>
 <script>
 import firebase from '@/plugins/firebase'
@@ -70,7 +70,7 @@ html {
   margin: 0;
 }
 
-h3{
+h2,h3{
   font-weight: normal;
   color: #565656;
 }

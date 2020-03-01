@@ -21,7 +21,7 @@
                 user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
             .username-display-wrapper
               .username-wrapper
-                h3 {{userOpenData.userName}}
+                h3(v-if="userOpenData.userName") {{userOpenData.userName}}
         .relative-link-list-wrapper
           .relative-link-wrapper
             .content-wrapper(v-if="instaURL")

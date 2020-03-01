@@ -6,7 +6,7 @@
   .cover-display-wrapper(v-show="!isLoading && coverImage")
     img(:src="coverImage" v-on:load="loaded")
   .cover-display-wrapper(v-if="!isLoading && !coverImage")
-    img(src="~assets/images/default_icon.png")
+    img(src="~assets/images/default_cover.png")
 
   .cover-close(v-if="isDashbord")
     i.material-icons photo_camera

@@ -1,10 +1,26 @@
 <template lang="pug">
-  section.section
+  section.event-container.lp-container
 
-    section.center-text
-      .first-view#fv ログインしていない時のトップ
+    section.main-message-container#main-message
+      .main-message-wrpper
+        h2 SNSやネットショップ<br>イベント情報の<br>まとめが簡単に！
+        h3 かんたんリンク作成サービス
+      .quick-start-wrapper
+        .quick-start-message ＼さっそくはじめてみる／
+        .login-button.align-center(@click="googleLogin")
+      .prepare-message
+        p 対応リンク先は続々追加予定！
+      .public-page-image
+        img(src="~assets/images/pubpage-sample.png")
+
+
+    //section.event-container#service-merit
+      .service-merit-wrapper
       .login-button.align-center(@click="googleLogin")
-      nuxt-link(to="dashbord") ダッシュボードへ
+
+    //section.event-container#start-step
+      .start-step-wrapper
+      .login-button.align-center(@click="googleLogin")
 
 </template>
 
@@ -53,6 +69,15 @@ export default {
   },
 
   created: function(){
+
+
+  },
+
+  mounted: function(){
+
+  },
+
+  beforeMount(){
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         this.setUser(user)
@@ -60,11 +85,6 @@ export default {
         this.$router.push('/dashbord')
       }
     })
-
-  },
-
-  mounted: function(){
-
   },
 
   components: {
@@ -95,10 +115,75 @@ export default {
   overflow-y: hidden;
 }
 
+#main-message.main-message-container,
+.event-container.lp-container{
+  padding-bottom: 0;
+}
+.quick-start-wrapper{
+
+  padding: 14px 0 24px;
+
+  .quick-start-message{
+    font-size: 0.7rem;
+    color: #565656;
+    letter-spacing: 1.2px;
+  }
+}
+
+.prepare-message{
+  font-size: 0.85rem;
+  color: #565656;
+  letter-spacing: 1.2px;
+  p{
+    margin-bottom: 24px;
+  }
+}
+
+.main-message-container{
+
+  padding: 12px 0 24px;
+  .main-message-wrpper{
+    h2{
+      font-weight: bold;
+      letter-spacing: 2px;
+      line-height: 2.5rem;
+    }
+    h3{
+      line-height: 2.5rem;
+    }
+  }
+  .public-page-image{
+    padding-bottom: 24px;
+    img{
+      width: 300px;
+      border: 3px solid #ccc;
+    }
+  }
+
+}
 
 
 @media screen and (max-width: 780px) {
+  .main-message-container{
 
+    .main-message-wrpper{
+      h2{
+        font-weight: bold;
+        letter-spacing: 2px;
+        line-height: 2.5rem;
+        font-size: 1.4rem;
+      }
+      h3{
+        line-height: 2.5rem;
+      }
+    }
+    .public-page-image{
+      img{
+        width: 300px;
+      }
+    }
+
+  }
 }
 
 @media screen and (max-width: 480px) {
