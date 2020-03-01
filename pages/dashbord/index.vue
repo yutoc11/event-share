@@ -28,6 +28,20 @@
         v-tab-item.event-container
           .account-tab-wrapper
             .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper
+                .user-input-edit
+                  .input-label ユーザーID（変更不可）
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
+
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper
+                .user-input-edit
+                  .input-label ログインGoogleアカウント
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.user.email") {{ $store.state.user.email }}
+
+            .user-input-item-wrapper
               .user-input-wrapper.account-item-wrapper(v-if="isEditName")
                 .user-input-edit
                   .input-label ユーザー名
@@ -35,20 +49,20 @@
                     .cancel-button.underline-link(@click="isEditName = false") キャンセル
                     .name-change-button.change-button.underline-link(@click="usernameCheck") 変更する
                 input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
-              //.user-input-wrapper.account-item-wrapper(v-else-if="username")
+              .user-input-wrapper.account-item-wrapper(v-else-if="username")
                 .user-input-edit
-                  .input-label ユーザーID
+                  .input-label ユーザー名
                   //.change-button-wrapper
                     .change-button.underline-link(@click="isEditName = true") 編集する
                 p(v-if="username") {{ username }}
               .user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
-                  .input-label ユーザーID（変更不可）
-                  //.change-button-wrapper
+                  .input-label ユーザー名
+                  .change-button-wrapper
                     .change-button.underline-link(@click="isEditName = true") 編集する
                 .username-display(v-if="isSetuserData")
-                  //p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
-                  p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
+                  p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
+                  p(v-else-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
 
 
             .icon-wrapper.account-item-wrapper
@@ -275,14 +289,6 @@
           .logout
             v-btn.simple-button(@click="logOut" color="#fff") ログアウト
           .unsubscribe.underline-link 退会する
-
-    section.test
-      nuxt-link(to="/") トップへ
-      p(v-if="$store.state.user") email： {{$store.state.user.email}}
-      .test(v-if="isSetuserData")
-        p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
-      .test(v-if="prefectures")
-        p {{prefectures[0].name}}
 
     section
       artwork-modal(:prefectures="prefectures" v-if="showModal")
@@ -868,6 +874,7 @@ export default {
 
     //ログアウト
     logOut(){
+      this.isSetuserData =  false;
       firebase.auth().signOut()
       .then(() => {
         this.setUser(null)
@@ -972,6 +979,10 @@ export default {
 
 .modal-body {
   overflow-y: hidden;
+}
+
+.v-window.event-tab-container.v-item-group.theme--light.v-tabs-items{
+  border: none;
 }
 
 .your-url-wrapper{
