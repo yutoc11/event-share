@@ -8,9 +8,11 @@
         .your-url あなたのURL
         .your-url {{ myUrl }}
         .confirm-wrapper(v-show="isSetuserData")
-          .confirm-your-url(v-if="username")
-            a.underline-link(:href="'https://event-share.net/'+ username" target="_blank") 自分のページを確認する
-          .confirm-your-url(v-else-if="isSetuserData")
+          //.confirm-your-url(v-if="username")
+            a.underline-link(:href="'https://event-share.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + username" target="_blank") 自分のページを確認する
+          //.confirm-your-url(v-else-if="isSetuserData && $store.state.userinfo.userName")
+            a.underline-link(:href="'https://event-share.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + $store.state.userinfo.userName" target="_blank") 自分のページを確認する
+          .confirm-your-url(v-if="isSetuserData")
             a.underline-link(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
           .copy-your-url(@click="copyMyUrl")
             v-icon(small) file_copy
@@ -31,22 +33,22 @@
                   .input-label ユーザー名
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="usernameChange") 変更する
+                    .name-change-button.change-button.underline-link(@click="usernameCheck") 変更する
                 input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
-              .user-input-wrapper.account-item-wrapper(v-else-if="username")
+              //.user-input-wrapper.account-item-wrapper(v-else-if="username")
                 .user-input-edit
-                  .input-label ユーザー名
-                  .change-button-wrapper
+                  .input-label ユーザーID
+                  //.change-button-wrapper
                     .change-button.underline-link(@click="isEditName = true") 編集する
                 p(v-if="username") {{ username }}
               .user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
-                  .input-label ユーザー名
-                  .change-button-wrapper
+                  .input-label ユーザーID（変更不可）
+                  //.change-button-wrapper
                     .change-button.underline-link(@click="isEditName = true") 編集する
                 .username-display(v-if="isSetuserData")
-                  p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
-                  p(v-else-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
+                  //p(v-if="$store.state.userinfo.userName") {{ $store.state.userinfo.userName }}
+                  p(v-if="$store.state.userinfo.userId") {{ $store.state.userinfo.userId }}
 
 
             .icon-wrapper.account-item-wrapper
@@ -96,7 +98,7 @@
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditInstaName = false") キャンセル
                     .name-change-button.change-button.underline-link(@click="userInstaNameChange") 変更する
-                input(v-if="userInstaName" v-model="userInstaName" type="text" name="userInstaName" placeholder="event_share" autocomplete="off").input-area
+                input(v-if="userInstaName" v-model="userInstaName" type="text" name="userInstaName" :placeholder="userInstaName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userInstaName" v-model="userInstaName" type="text" name="userInstaName" :placeholder="$store.state.userinfo.userInstaName" autocomplete="off").input-area
                 input(v-else v-model="userInstaName" type="text" name="userInstaName" placeholder="event_share" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userInstaName")
@@ -123,7 +125,7 @@
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditTwitterName = false") キャンセル
                     .name-change-button.change-button.underline-link(@click="userTwitterNameChange") 変更する
-                input(v-if="userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" placeholder="event_share" autocomplete="off").input-area
+                input(v-if="userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" :placeholder="userTwitterName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" :placeholder="$store.state.userinfo.userTwitterName" autocomplete="off").input-area
                 input(v-else v-model="userTwitterName" type="text" name="userTwitterName" placeholder="event_share" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userTwitterName")
@@ -142,6 +144,32 @@
                   p(v-if="$store.state.userinfo.userTwitterName") {{ $store.state.userinfo.userTwitterName }}
                   p(v-else) 未設定
 
+            //-Facebook
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper(v-if="isEditFacebookName")
+                .user-input-edit
+                  .input-label Facebookユーザー名
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="isEditFacebookName = false") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userFacebookNameChange") 変更する
+                input(v-if="userFacebookName" v-model="userFacebookName" type="text" name="userFacebookName" :placeholder="userFacebookName" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userFacebookName" v-model="userTwitterName" type="text" name="userFacebookName" :placeholder="$store.state.userinfo.userFacebookName" autocomplete="off").input-area
+                input(v-else v-model="userFacebookName" type="text" name="userFacebookName" placeholder="https://www.facebook.com/event_share/" autocomplete="off").input-area
+              .user-input-wrapper.account-item-wrapper(v-else-if="userFacebookName")
+                .user-input-edit
+                  .input-label Facebookユーザー名
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditFacebookName = true") 編集する
+                p(v-if="userFacebookName") {{ userFacebookName }}
+                p(v-else) 未設定
+              .user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label Facebookユーザー名
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditFacebookName = true") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userFacebookName") {{ $store.state.userinfo.userFacebookName }}
+                  p(v-else) 未設定
 
             //-minne
             .user-input-item-wrapper
@@ -151,9 +179,9 @@
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditMinneName = false") キャンセル
                     .name-change-button.change-button.underline-link(@click="userMinneNameChange") 変更する
-                input(v-if="userMinneName" v-model="userMinneName" type="text" name="userMinneName" placeholder="https://minne.com/event_share" autocomplete="off").input-area
+                input(v-if="userMinneName" v-model="userMinneName" type="text" name="userMinneName" :placeholder="userMinneName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userMinneName" v-model="userMinneName" type="text" name="userMinneName" :placeholder="$store.state.userinfo.userMinneName" autocomplete="off").input-area
-                input(v-else v-model="userMinneName" type="text" name="userMinneName" placeholder="event_share" autocomplete="off").input-area
+                input(v-else v-model="userMinneName" type="text" name="userMinneName" placeholder="https://minne.com/event_share" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userMinneName")
                 .user-input-edit
                   .input-label minneのショップURL
@@ -171,6 +199,33 @@
                   p(v-else) 未設定
 
 
+            //-creema
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper(v-if="isEditCreemaName")
+                .user-input-edit
+                  .input-label CreemaのショップURL
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="isEditCreemaName = false") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userCreemaNameChange") 変更する
+                input(v-if="userCreemaName" v-model="userCreemaName" type="text" name="userCreemaName" :placeholder="userCreemaName" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userCreemaName" v-model="userCreemaName" type="text" name="userCreemaName" :placeholder="$store.state.userinfo.userCreemaName" autocomplete="off").input-area
+                input(v-else v-model="userCreemaName" type="text" name="userCreemaName" placeholder="https://www.creema.jp/creator/000000" autocomplete="off").input-area
+              .user-input-wrapper.account-item-wrapper(v-else-if="userCreemaName")
+                .user-input-edit
+                  .input-label CreemaのショップURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditCreemaName = true") 編集する
+                p(v-if="userCreemaName") {{ userCreemaName }}
+                p(v-else) 未設定
+              .user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label CreemaのショップURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditCreemaName = true") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userCreemaName") {{ $store.state.userinfo.userCreemaName }}
+                  p(v-else) 未設定
+
             //-BASE
             .user-input-item-wrapper
               .user-input-wrapper.account-item-wrapper(v-if="isEditBaseName")
@@ -179,15 +234,15 @@
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditBaseName = false") キャンセル
                     .name-change-button.change-button.underline-link(@click="userBaseNameChange") 変更する
-                input(v-if="userBaseName" v-model="userBaseName" type="text" name="userBaseName" placeholder="https://event-share.thebase.in/" autocomplete="off").input-area
+                input(v-if="userBaseName" v-model="userBaseName" type="text" name="userBaseName" :placeholder="userBaseName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userBaseName" v-model="userBaseName" type="text" name="userBaseName" :placeholder="$store.state.userinfo.userBaseName" autocomplete="off").input-area
-                input(v-else v-model="userBaseName" type="text" name="userBaseName" placeholder="event_share" autocomplete="off").input-area
+                input(v-else v-model="userBaseName" type="text" name="userBaseName" placeholder="https://event-share.thebase.in/" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userBaseName")
                 .user-input-edit
                   .input-label BASEのショップURL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditBaseName = true") 編集する
-                p(v-if="userBaseeName") {{ userBaseName }}
+                p(v-if="userBaseName") {{ userBaseName }}
                 p(v-else) 未設定
               .user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
@@ -287,8 +342,12 @@ export default {
       userInstaName: '',
       isEditTwitterName: false,
       userTwitterName: '',
+      isEditFacebookName: false,
+      userFacebookName: '',
       isEditMinneName: false,
       userMinneName: '',
+      isEditCreemaName: false,
+      userCreemaName: '',
       isEditBaseName: false,
       userBaseName: '',
       uuid: '',
@@ -307,6 +366,7 @@ export default {
       pastDelete: false,
       deletedPastEvents: false,
       event: '',
+      isExistUserName: false,
     };
   },
 
@@ -327,20 +387,25 @@ export default {
     ...mapGetters(['isAuthenticated']),
 
     myUrl: function () {
+      //if(this.isSetuserData){
+        //if(this.$store.state.userinfo.userName){
+        //  let myUrl = 'https://event-share.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.$store.state.userinfo.userName;
+        //  console.log("this.$store.state.userinfo.userName")
+        //  return myUrl;
+        //}else if(this.username){
+        //  let myUrl = 'https://event-share.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.username;
+        //  console.log("this.username")
+        //  return myUrl;
+        //}else{
+        //  let myUrl = 'https://event-share.net/' + this.$store.state.user.uid;
+        //  console.log("this.$store.state.user.uid")
+        //  return myUrl;
+        //}
+      //}
       if(this.isSetuserData){
-        if(this.$store.state.userinfo.userName){
-          let myUrl = 'https://event-share.net/' + this.$store.state.userinfo.userName;
-          console.log("this.$store.state.userinfo.userName")
-          return myUrl;
-        }else if(this.username){
-          let myUrl = 'https://event-share.net/' + this.username;
-          console.log("this.username")
-          return myUrl;
-        }else{
-          let myUrl = 'https://event-share.net/' + this.$store.state.user.uid;
-          console.log("this.$store.state.user.uid")
-          return myUrl;
-        }
+        let myUrl = 'https://event-share.net/' + this.$store.state.user.uid;
+        console.log("this.$store.state.user.uid")
+        return myUrl;
       }
     },
   },
@@ -547,14 +612,49 @@ export default {
 
     },
 
+    usernameCheck(){
+
+      const db = firebase.firestore();
+      let userName = this.username;
+      console.log(userName);
+      console.log('ユーザーネームチェック！');
+
+      db.collection('users').where("userName", "==", this.userName)
+         .get().then( (querySnapshot) => {
+
+             if(querySnapshot.length){
+               querySnapshot.forEach( (doc) =>
+                  {
+
+                    //this.isExistUserName = true,
+                    //console.log(this.isExistUserName),
+                    //resolve('deplicated!')
+                    console.log('↑ダブりネームキャッチしたよ！')
+                  }
+               );
+             }else{
+               //reject('unique!')
+               console.log('ダブりなし')
+             }
+
+           }).catch(
+              this.usernameChange(),
+              console.log("usernameChangeなう"),
+           ).finally(()=>{
+
+             });
+    },
+
     usernameChange(){
       const db = firebase.firestore();
       const userId = this.$store.state.user.uid;
       console.log(userId);
-      const userName = this.username;
+
+      let userName = this.username;
       console.log(userName);
 
-      if(userName != null){
+
+      if(userName != null && !this.isExistUserName){
         this.$store.state.userinfo.userName = userName;
         db.collection("users").doc(userId).set({
           userId: userId,
@@ -571,6 +671,7 @@ export default {
           );
       }
       this.isEditName = false;
+
     },
 
     userInstaNameChange(){
@@ -625,6 +726,32 @@ export default {
       this.isEditTwitterName = false;
     },
 
+    userFacebookNameChange(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userFacebookName = this.userFacebookName;
+      console.log(userFacebookName);
+
+      if(userFacebookName != null){
+        this.$store.state.userinfo.userFacebookName = userFacebookName;
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userFacebookName: userFacebookName,
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.isEditFacebookName = false;
+    },
+
     userMinneNameChange(){
       const db = firebase.firestore();
       const userId = this.$store.state.user.uid;
@@ -649,6 +776,32 @@ export default {
           );
       }
       this.isEditMinneName = false;
+    },
+
+    userCreemaNameChange(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userCreemaName = this.userCreemaName;
+      console.log(userCreemaName);
+
+      if(userCreemaName != null){
+        this.$store.state.userinfo.userCreemaName = userCreemaName;
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userCreemaName: userCreemaName,
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.isEditCreemaName = false;
     },
 
     userBaseNameChange(){

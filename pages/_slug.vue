@@ -20,27 +20,34 @@
                 user-icon(:iconImage="userOpenData.iconUrl" @loadedIcon="loadedIcon")
             .username-display-wrapper
               .username-wrapper
-                h3 {{userName}}
+                h3 {{userOpenData.userName}}
         .relative-link-list-wrapper
           .relative-link-wrapper
-            .content-wrapper
+            .content-wrapper(v-if="instaURL")
               .content-img
-                img(src="~/assets/images/twitter.png")
-            .content-wrapper
+                a(:href="instaURL" target="_blank")
+                  img(src="~/assets/images/instagram.png")
+            .content-wrapper(v-if="twitterURL")
               .content-img
-                img(src="~/assets/images/instagram.png")
-            .content-wrapper
+                a(:href="twitterURL" target="_blank")
+                  img(src="~/assets/images/twitter.png")
+            .content-wrapper(v-if="facebookURL")
               .content-img
-                img(src="~/assets/images/minne_appicon.png")
-            .content-wrapper
+                a(:href="facebookURL" target="_blank")
+                  img(src="~/assets/images/facebook.png")
+            .content-wrapper(v-if="minneURL")
               .content-img
-                img(src="~/assets/images/base_icon.png")
-            .content-wrapper
+                a(:href="minneURL" target="_blank")
+                  img(src="~/assets/images/minne_appicon.png")
+            .content-wrapper(v-if="baseURL")
               .content-img
-                img(src="~/assets/images/twitter.png")
-            .content-wrapper
+                a(:href="baseURL" target="_blank")
+                  img(src="~/assets/images/base_icon.png")
+            .content-wrapper(v-if="creemaURL")
               .content-img
-                img(src="~/assets/images/facebook.png")
+                a(:href="creemaURL" target="_blank")
+                  img(src="~/assets/images/creema.png")
+
         .myevent-store-wrapper
           .store-info-label 販売情報
 
@@ -113,6 +120,76 @@ export default {
 
   computed:{
 
+    instaURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userInstaName){
+          let instaURL = 'https://www.instagram.com/' + this.userOpenData.userInstaName + '/';
+          console.log("this.$store.state.userinfo.userInstaName")
+          return instaURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    twitterURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userTwitterName){
+          let twitterURL = 'https://twitter.com/' + this.userOpenData.userTwitterName;
+          console.log("this.$store.state.userinfo.userTwitterName")
+          return twitterURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    facebookURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userFacebookName){
+          let facebookURL = this.userOpenData.userFacebookName;
+          console.log('facebookURL');
+          console.log(facebookURL);
+          return facebookURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    minneURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userMinneName){
+          let minneURL = this.userOpenData.userMinneName;
+          return minneURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    creemaURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userCreemaName){
+          let creemaURL = this.userOpenData.userCreemaName;
+          return creemaURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    baseURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userBaseName){
+          let baseURL = this.userOpenData.userBaseName;
+          return baseURL;
+        }else{
+          return;
+        }
+      }
+    },
+
   },
 
   mounted: function(){
@@ -126,39 +203,9 @@ export default {
   },
 
   created: function(){
-    this.userName = this.$route.path.slice(1);
-    console.log(this.userName)
-    const db = firebase.firestore();
-
-    db.collection('users').where("userName", "==", this.userName)
-       .get().then((querySnapshot) => {
-
-         querySnapshot.forEach((doc) => {
-
-             this.isCatchData = true;
-             this.userOpenData = doc.data();
-             if(!this.userOpenData.coverUrl){
-               this.isLoadingCover = false;
-             }
-             if(!this.userOpenData.iconUrl){
-               this.isLoadingIcon = false;
-             }
-             console.log(this.userOpenData)
-             console.log(this.isCatchData)
-             console.log('↑キャッチしたよ！')
-             setTimeout(this.getEvents,100);
-
-           }
-         );
-
-         })
-          .catch(
-            this.passUserName = true,
-            console.log(this.passUserName),
-           function(error) {
-
-           console.log("Error getting documents: ", error);
-         });
+    //this.userName = this.$route.path.slice(1);
+    //console.log(this.userName)
+    //const db = firebase.firestore();
   },
 
   beforeMount: function(){
@@ -336,33 +383,35 @@ body{
 
 .relative-link-list-wrapper{
   height: 70px;
-  margin-left: 95px;
+  margin: 4px 0 0 95px;
   padding-left:20px;
 }
 
 .relative-link-wrapper{
   display:flex;
-  padding: 8px 4px;
+  padding: 4px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  background-color: #FCFCFC;
+  border-radius: 50px 0 0 50px;
 
   .content-wrapper{
-    margin:0 8px 0 0;
+    margin:4px 8px 4px 4px;
     cursor: pointer;
     //background-color: #ccc;
-    border-radius: 30px;
-    width: 30px;
-    height: 30px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
 
     .content-img{
       background-color: #fff;
-      border-radius: 30px;
-      width: 30px;
-      height: 30px;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
       img{
-        border-radius: 30px;
-        width: 30px;
-        height: 30px;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
         object-fit: contain;
       }
     }
