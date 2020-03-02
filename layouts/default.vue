@@ -17,7 +17,7 @@
 
       footer.hf-bg-color
         .center-text
-          p.footer-text ©2020 event-share.
+          p.footer-text ©2020 Intro-me.
 </template>
 <script>
 import firebase from '@/plugins/firebase'
