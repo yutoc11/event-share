@@ -3,7 +3,7 @@
     .event-share
       header.hf-bg-color
         .header-menu
-          .header-logo
+          nuxt-link.header-logo(to="/")
             img(src="~/assets/images/logo.png")
           .header-menu-list
             .header-tomypage(v-if="isAuthenticated")
@@ -14,6 +14,10 @@
 
       section
         nuxt/
+
+      .term-privacy-footer
+        nuxt-link.footer-link.caption.px-4.font-weight-bold(to="../terms") 利用規約
+        nuxt-link.footer-link.caption.px-4.font-weight-bold(to="../privacy") プライバシーポリシー
 
       footer.hf-bg-color
         .center-text
@@ -119,6 +123,18 @@ a{
   font-size: 0.8rem;
   text-decoration: underline;
   color: #565656;
+}
+
+.term-privacy-footer{
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+  background-color: #FBE9F5;
+  .footer-link{
+    text-decoration: none;
+    color: #A7A7A7;
+  }
+
 }
 
 .underline-link:hover{
