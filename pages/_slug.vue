@@ -89,7 +89,22 @@ export default {
     return {
       bodyAttrs: {
         class: this.showModal ? 'modal-body' : ''
-      }
+      },
+
+      title: this.userOpenData.userName +' | Intro-me',
+      meta: [
+          { hid: 'description', name: 'description', content: 'SNSやネットショップ、イベント情報のまとめが簡単にできるサービスです' },
+          { hid: 'og:site_name', property: 'og:site_name', content: this.userOpenData.userName + ' | Intro-me' },
+          { hid: 'og:type', property: 'og:type', content: 'website' },
+          { hid: 'og:url', property: 'og:url', content: `https://intro-me.net${this.$route.path}` },
+          { hid: 'og:title', property: 'og:title', content: this.userOpenData.userName + ' | Intro-me' },
+          { hid: 'og:description', property: 'og:description', content: 'SNSやネットショップ、イベント情報のまとめが簡単にできるサービスです' },
+          { hid: 'og:image', property: 'og:image', content: this.userOpenData.coverUrl },
+          { property: 'article:publisher', content: 'https://www.instagram.com/_o_s_a_o_/' },
+          { property: 'fb:app_id', content: '213129736544639' },
+          { name: 'twitter:card', content: 'summary_large_image' },
+          { name: 'twitter:site', content: '@Twitter' },
+        ]
     }
   },
 
