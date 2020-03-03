@@ -99,6 +99,7 @@ p{
 .event-share-user-pub{
   min-height: 100vh;
   position: relative;
+  box-shadow: 0 0 8px gray;
 }
 
 

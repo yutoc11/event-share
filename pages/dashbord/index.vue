@@ -52,7 +52,7 @@
               .user-input-wrapper.account-item-wrapper(v-else-if="username")
                 .user-input-edit
                   .input-label ユーザー名
-                  //.change-button-wrapper
+                  .change-button-wrapper
                     .change-button.underline-link(@click="isEditName = true") 編集する
                 p(v-if="username") {{ username }}
               .user-input-wrapper.account-item-wrapper(v-else)

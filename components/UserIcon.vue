@@ -7,7 +7,7 @@
         circle(cx="50" cy="50" r="50")
   .icon-display-wrapper(v-show="!isLoading && iconImage")
     img(:src="iconImage" v-on:load="loaded")
-  .icon-display-wrapper(v-if="!isLoading && !iconImage")
+  .icon-display-wrapper(v-if="isLoading && !iconImage")
     img(src="~assets/images/default_icon.png")
 
   .icon-close(v-if="isDashbord")
@@ -66,11 +66,11 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background-color: transparent;
+  background-color: #fff;
   width: 100px;
   height: 100px;
   img{
-    border: 3px solid #fff;
+    border: 3px solid #ccc;
     border-radius: 50%;
     object-fit: cover;
     width: 100px;
@@ -81,7 +81,7 @@ export default {
     background-color: transparent;
     width: 100px;
     height: 100px;
-    border: 1px solid #fff;
+    border: 1px solid #ccc;
   }
 }
 
@@ -103,13 +103,13 @@ export default {
 
 .icon-close{
   position: absolute;
-  background-color: #ccc;
+  background-color: #fff;
   border-radius: 50%;
   bottom: -8px;
   right: -7px;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  border: 1px solid #ccc;
   i.material-icons{
     padding: 4.5px 0 0 4.5px;
     font-size: 14px;

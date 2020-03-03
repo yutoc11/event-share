@@ -5,7 +5,7 @@
       rect(width="100%" height="100%")
   .cover-display-wrapper(v-show="!isLoading && coverImage")
     img(:src="coverImage" v-on:load="loaded")
-  .cover-display-wrapper(v-if="!isLoading && !coverImage")
+  .cover-display-wrapper(v-if="isLoading && !coverImage")
     img(src="~assets/images/default_cover.png")
 
   .cover-close(v-if="isDashbord")
@@ -56,7 +56,7 @@ export default {
   .cover-display-wrapper{
       margin: 10px auto;
       img{
-        border: 3px solid #fff;
+        border: 3px solid #ccc;
       }
   }
 
@@ -95,13 +95,13 @@ export default {
 
 .cover-close{
   position: absolute;
-  background-color: #ccc;
+  background-color: #fff;
   border-radius: 50%;
   bottom: -8px;
   right: -7px;
   width: 25px;
   height: 25px;
-  border: 1px solid #fff;
+  border: 1px solid #ccc;
   i.material-icons{
     padding: 4.5px 0 0 4.5px;
     font-size: 14px;
@@ -119,7 +119,7 @@ export default {
   height: 52.5vw;
 }
 
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 432px) {
 
     .cover-image-wrapper.dashcover{
       width: 85vw;

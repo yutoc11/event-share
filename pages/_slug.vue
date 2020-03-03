@@ -50,7 +50,7 @@
                   img(src="~/assets/images/creema.png")
 
         .myevent-store-wrapper
-          .store-info-label 販売情報
+          .store-info-label アクティビティ
 
       section.event-info-wrapper
         v-tabs.event-tab-wrapper(v-model="tab" background-color="transparent" color="#F0858C" grow)
@@ -440,7 +440,8 @@ body{
   margin-bottom: 4px;
   font-size: 0.7rem;
   font-weight: bold;
-  color: #565656;
+  letter-spacing: 0.4px;
+  color: #A7A7A7;
 }
 .event-info-wrapper{
   padding: 0 12px 12px 12px;
