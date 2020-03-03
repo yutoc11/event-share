@@ -7,7 +7,7 @@
             img(src="~/assets/images/logo.png")
           .header-menu-list
             .header-tomypage(v-if="isAuthenticated")
-              a.tomypage-button(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 公開ページへ
+              a.tomypage-button(:href="'https://intro-me.net/'+ $store.state.userinfo.userId" target="_blank") 公開ページへ
             .header-login(v-else)
                .login-button(@click="googleLogin")
         .header-line

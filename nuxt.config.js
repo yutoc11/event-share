@@ -46,7 +46,13 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     'nuxt-clipboard2',
+    '@nuxtjs/sitemap',
   ],
+
+  sitemap: {
+    path: '/sitemap.xml',
+    hostname: 'https://intro-me.net',
+  },
 
   /*
   ** Axios module configuration

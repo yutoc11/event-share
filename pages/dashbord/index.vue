@@ -9,11 +9,11 @@
         .your-url {{ myUrl }}
         .confirm-wrapper(v-show="isSetuserData")
           //.confirm-your-url(v-if="username")
-            a.underline-link(:href="'https://event-share.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + username" target="_blank") 自分のページを確認する
+            a.underline-link(:href="'https://intro-me.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + username" target="_blank") 自分のページを確認する
           //.confirm-your-url(v-else-if="isSetuserData && $store.state.userinfo.userName")
-            a.underline-link(:href="'https://event-share.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + $store.state.userinfo.userName" target="_blank") 自分のページを確認する
+            a.underline-link(:href="'https://intro-me.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + $store.state.userinfo.userName" target="_blank") 自分のページを確認する
           .confirm-your-url(v-if="isSetuserData")
-            a.underline-link(:href="'https://event-share.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
+            a.underline-link(:href="'https://intro-me.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
           .copy-your-url(@click="copyMyUrl")
             v-icon(small) file_copy
 
@@ -395,21 +395,21 @@ export default {
     myUrl: function () {
       //if(this.isSetuserData){
         //if(this.$store.state.userinfo.userName){
-        //  let myUrl = 'https://event-share.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.$store.state.userinfo.userName;
+        //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.$store.state.userinfo.userName;
         //  console.log("this.$store.state.userinfo.userName")
         //  return myUrl;
         //}else if(this.username){
-        //  let myUrl = 'https://event-share.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.username;
+        //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.username;
         //  console.log("this.username")
         //  return myUrl;
         //}else{
-        //  let myUrl = 'https://event-share.net/' + this.$store.state.user.uid;
+        //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid;
         //  console.log("this.$store.state.user.uid")
         //  return myUrl;
         //}
       //}
       if(this.isSetuserData){
-        let myUrl = 'https://event-share.net/' + this.$store.state.user.uid;
+        let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid;
         console.log("this.$store.state.user.uid")
         return myUrl;
       }
@@ -501,7 +501,7 @@ export default {
     },
 
     copyMyUrl() {
-      let myEventUrl = this.username ? 'https://event-share.net/'+ this.username : 'https://event-share.net/'+ this.$store.state.userinfo.userName;
+      let myEventUrl = this.username ? 'https://intro-me.net/'+ this.username : 'https://intro-me.net/'+ this.$store.state.userinfo.userName;
       this.$copyText(myEventUrl)
       console.log(myEventUrl)
       //this.$parent.flash_message = "コピーしました"
