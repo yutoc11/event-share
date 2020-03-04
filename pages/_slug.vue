@@ -396,10 +396,12 @@ body{
   width:100px;
   margin: 0 auto;
   .username-wrapper{
+    font-family: 'Palanquin', sans-serif;
     text-align: center;
     h3{
       font-size: 1rem;
       font-weight: bold;
+      letter-spacing: 1.2px;
       color: #A7A7A7;
     }
   }

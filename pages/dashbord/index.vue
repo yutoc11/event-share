@@ -162,7 +162,7 @@
             .user-input-item-wrapper
               .user-input-wrapper.account-item-wrapper(v-if="isEditFacebookName")
                 .user-input-edit
-                  .input-label Facebookユーザー名
+                  .input-label facebook 公開ページURL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditFacebookName = false") キャンセル
                     .name-change-button.change-button.underline-link(@click="userFacebookNameChange") 変更する
@@ -171,14 +171,14 @@
                 input(v-else v-model="userFacebookName" type="text" name="userFacebookName" placeholder="https://www.facebook.com/event_share/" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userFacebookName")
                 .user-input-edit
-                  .input-label Facebookユーザー名
+                  .input-label facebook 公開ページURL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditFacebookName = true") 編集する
                 p(v-if="userFacebookName") {{ userFacebookName }}
                 p(v-else) 未設定
               .user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
-                  .input-label Facebookユーザー名
+                  .input-label facebook 公開ページURL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditFacebookName = true") 編集する
                 .username-display(v-if="isSetuserData")

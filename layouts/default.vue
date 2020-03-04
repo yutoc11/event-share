@@ -54,9 +54,11 @@ export default {
 </script>
 
 <style lang="scss">
+.v-application{
+  font-family: 'M PLUS Rounded 1c', sans-serif!important;
+}
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif!important;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

@@ -97,6 +97,9 @@ export default {
   */
   buildModules: [
     '@nuxtjs/vuetify',
+    ['@nuxtjs/google-analytics', {
+      id: 'UA-159675648-1'
+    }]
   ],
   /*
   ** Nuxt.js modules
@@ -106,11 +109,20 @@ export default {
     '@nuxtjs/axios',
     'nuxt-clipboard2',
     '@nuxtjs/sitemap',
+    'nuxt-webfontloader',
   ],
 
   sitemap: {
     path: '/sitemap.xml',
     hostname: 'https://intro-me.net',
+  },
+
+  webfontloader: {
+    google: {
+      families: ['M+PLUS+Rounded+1c|Palanquin:300,400,500'],
+      //families: ['M+PLUS+Rounded+1c'],
+      //families: ['Palanquin:300,400,500']
+    }
   },
 
   /*
