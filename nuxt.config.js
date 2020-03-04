@@ -12,8 +12,8 @@ const siteDesc = 'SNSやネットショップ、イベント情報のまとめ�
 //const siteKeywords = '１つ目,２つ目,３つ目,４つ目'
 
 // images
-const iconImages = baseDir + 'img/icons/'
-const ogpImages = basePath + 'img/ogp/'
+const iconImages = baseDir + 'images/icons/'
+//const ogpImages = basePath + 'images/ogp/'
 
 // pwa
 const shortName = 'Intro-me'
