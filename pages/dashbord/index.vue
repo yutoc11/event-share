@@ -472,6 +472,8 @@ export default {
              .catch(function(error) {
                console.log("Error getting documents: ", error);
              });
+      }else{
+          this.$router.push('/')
       }
     })
 
