@@ -16,8 +16,12 @@
         nuxt/
 
       .term-privacy-footer
-        nuxt-link.footer-link.caption.px-4.font-weight-bold(to="../terms") 利用規約
-        nuxt-link.footer-link.caption.px-4.font-weight-bold(to="../privacy") プライバシーポリシー
+        nuxt-link.footer-link.caption.font-weight-bold(to="../terms") 規約
+        nuxt-link.footer-link.caption.font-weight-bold(to="../privacy") プライバシーポリシー
+        a.footer-link.caption.font-weight-bold(
+          v-if="isAuthenticated"
+          :href="'https://docs.google.com/forms/d/e/1FAIpQLSfi7oqBWWag5ACzV-vshvX5WSX6zSFWby6tDXeaDK1zqH0ABw/viewform?usp=pp_url&entry.18453089=' + this.$store.state.user.email"
+          target="_blank") ご意見・ご感想
 
       footer.hf-bg-color
         .center-text
@@ -135,6 +139,7 @@ a{
   .footer-link{
     text-decoration: none;
     color: #A7A7A7;
+    padding: 0 6px;
   }
 
 }
