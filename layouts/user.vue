@@ -229,7 +229,7 @@ header{
 .input-area{
   padding: 4px 10px;
   margin-bottom: 4px;
-  font-size: 0.8rem;
+  font-size: 16px;
   border-radius: 4px;
   background: #FFFFFF;
   color: #787C7B;

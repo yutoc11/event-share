@@ -1045,7 +1045,7 @@ export default {
     .user-input-item-wrapper{
 
       .user-input-wrapper{
-        min-height: 55px;
+        min-height: 65px;
 
           .user-input-edit{
             display: flex;
