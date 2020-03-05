@@ -12,6 +12,8 @@
         p 対応リンク先は続々追加予定！
       .public-page-image
         img(src="~assets/images/pubpage-sample.png")
+      .attention-message
+        p ※画面イメージは変わることがございます
 
 
     //section.event-container#service-merit
@@ -139,6 +141,19 @@ export default {
   }
 }
 
+.attention-message{
+
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 1.2px;
+  p{
+    margin-bottom: 24px;
+    color: #A7A7A7;
+  }
+}
+
 .main-message-container{
 
   padding: 12px 0 24px;
@@ -153,7 +168,6 @@ export default {
     }
   }
   .public-page-image{
-    padding-bottom: 24px;
     img{
       width: 300px;
       border: 3px solid #ccc;
