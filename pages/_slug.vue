@@ -3,6 +3,7 @@
     .no-catchdata-wrapper(v-if="!userOpenData")
       loading-image
       p(v-if="isNoUser") 読み込み中です。<br>お探しのページは存在しない可能性がございます。<br>お手数ですが、改めてURLをお確かめください。
+      nuxt-link.underline-link.no-user-link(v-if="isNoUser" to="/") ホームに戻る
     //.no-user-wrapper
       //.no-user-message
         loading-image
@@ -341,6 +342,7 @@ body{
 }
 
 .no-catchdata-wrapper{
+  max-width: 432px;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -350,6 +352,9 @@ body{
   p{
     font-size: 0.7rem;
     text-align: center;
+  }
+  .underline-link.no-user-link{
+    color: #565656;
   }
 }
 
