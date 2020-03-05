@@ -1044,6 +1044,13 @@ export default {
     .account-item-wrapper{
       margin-bottom: 10px;
     }
+
+    .cover-wrapper.account-item-wrapper,
+    .icon-wrapper.account-item-wrapper,
+    .user-input-item-wrapper{
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
     .user-input-item-wrapper{
 
       .user-input-wrapper{
@@ -1262,7 +1269,6 @@ export default {
 .logout{
   margin: 5px 0;
 }
-
 
 @media screen and (max-width: 780px) {
 
