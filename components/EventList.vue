@@ -9,7 +9,7 @@
       h3.event-title {{event.eventTitle}}
       p.position {{event.booth}}
       p.booth-name {{event.shopName}}
-      a.oficial-link.underline-link(:href="event.eventURL") 公式HPでみる
+      a.oficial-link.underline-link(:href="event.eventURL" target="_blank") 公式HPでみる
       .edit-wrapper(v-if="isDashbord")
         .delete.underline-link(@click="openEventDeleteModal(event)") 削除
         .edit.underline-link(@click="openEventEditModal(event)") 編集
