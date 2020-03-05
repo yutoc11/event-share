@@ -503,7 +503,8 @@ export default {
     },
 
     copyMyUrl() {
-      let myEventUrl = this.username ? 'https://intro-me.net/'+ this.username : 'https://intro-me.net/'+ this.$store.state.userinfo.userName;
+      //let myEventUrl = this.username ? 'https://intro-me.net/'+ this.username : 'https://intro-me.net/'+ this.$store.state.userinfo.userName;
+      let myEventUrl = 'https://intro-me.net/'+ this.$store.state.userinfo.userId;
       this.$copyText(myEventUrl)
       console.log(myEventUrl)
       //this.$parent.flash_message = "コピーしました"
