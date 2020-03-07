@@ -29,7 +29,7 @@
 
       footer.hf-bg-color
         .center-text
-          p.footer-text ©2020 Intro-me.
+          p.footer-text ©2020 Intro-me. produced by <a :href="osaoHandmade" target="_blank">osao</a>
 </template>
 <script>
 import firebase from '@/plugins/firebase'
@@ -37,6 +37,12 @@ import store from '~/store/index.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {
+
+  data(){
+    return{
+      osaoHandmade: 'http://osao-handmade.firebaseapp.com/',
+    };
+  },
 
   computed:{
     ...mapState(['user']),
@@ -325,6 +331,10 @@ footer{
   background-color: rgba(255,255,255,0);
   p.footer-text{
     margin-bottom: 0;
+    font-size: 0.8rem;
+    a{
+      color: #565656;
+    }
   }
 }
 </style>
