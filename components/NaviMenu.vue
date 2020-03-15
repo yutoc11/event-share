@@ -44,6 +44,7 @@ export default {
       firebase.auth().signOut()
       .then(() => {
         this.setUser(null)
+        this.setUserInfo(null)
         //this.$router.push('/?flash=logout')
         this.$router.push('/')
       }).catch((error) => {
