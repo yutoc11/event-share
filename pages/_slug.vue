@@ -37,6 +37,10 @@
               .content-img
                 a(:href="facebookURL" target="_blank")
                   img(src="~/assets/images/facebook.png")
+            .content-wrapper(v-if="noteURL")
+              .content-img
+                a(:href="noteURL" target="_blank")
+                  img(src="~/assets/images/note.png")
             .content-wrapper(v-if="minneURL")
               .content-img
                 a(:href="minneURL" target="_blank")
@@ -49,6 +53,18 @@
               .content-img
                 a(:href="creemaURL" target="_blank")
                   img(src="~/assets/images/creema.png")
+            .content-wrapper(v-if="mercariURL")
+              .content-img
+                a(:href="mercariURL" target="_blank")
+                  img(src="~/assets/images/mercari.png")
+
+        .myoriginal-wrapper(v-bind:class='{oneUrl:isOneUrl,fewUrl:isFewUrl, manyUrl: isManyUrl}')
+          a.myoriginal-label.underline-link(v-if="originalURL" :href="originalURL" target="_blank")
+            .myoriginal-label-text {{userOpenData.userOriginalName}}
+          a.myoriginal-label.underline-link(v-if="originalURL2" :href="originalURL2" target="_blank")
+            .myoriginal-label-text {{userOpenData.userOriginalName2}}
+          a.myoriginal-label.underline-link(v-if="originalURL3" :href="originalURL3" target="_blank")
+            .myoriginal-label-text {{userOpenData.userOriginalName3}}
 
         .myevent-store-wrapper
           .store-info-label アクティビティ
@@ -125,6 +141,9 @@ export default {
       isLoadingEvents: true,
       isLoadingPage: true,
       isNoUser: false,
+      isOneUrl: false,
+      isFewUrl: false,
+      isManyUrl: false,
     };
   },
 
@@ -137,6 +156,8 @@ export default {
   },
 
   computed:{
+
+
 
     instaURL: function(){
       if(this.isCatchData){
@@ -175,6 +196,18 @@ export default {
       }
     },
 
+    noteURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userNoteName){
+          let noteURL = this.userOpenData.userNoteName;
+          console.log('noteURL');
+          return noteURL;
+        }else{
+          return;
+        }
+      }
+    },
+
     minneURL: function(){
       if(this.isCatchData){
         if(this.userOpenData.userMinneName){
@@ -202,6 +235,57 @@ export default {
         if(this.userOpenData.userBaseName){
           let baseURL = this.userOpenData.userBaseName;
           return baseURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    mercariURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userMercariName){
+          let mercariURL = this.userOpenData.userMercariName;
+          return mercariURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    originalURL: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userOriginalUrl){
+          this.isOneUrl = true;
+          let originalURL = this.userOpenData.userOriginalUrl;
+          return originalURL;
+        }else{
+          return;
+        }
+      }
+    },
+
+    originalURL2: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userOriginalUrl2){
+          this.isOneUrl = false;
+          this.isFewUrl = true;
+          let originalURL2 = this.userOpenData.userOriginalUrl2;
+          return originalURL2;
+        }else{
+          return;
+        }
+      }
+    },
+
+    originalURL3: function(){
+      if(this.isCatchData){
+        if(this.userOpenData.userOriginalUrl3){
+          if(this.isFewUrl){
+            this.isFewUrl = false;
+            this.isManyUrl = true;
+          }
+          let originalURL3 = this.userOpenData.userOriginalUrl3;
+          return originalURL3;
         }else{
           return;
         }
@@ -454,7 +538,57 @@ body{
     transition-duration: 0.25s;
   }
 }
+.myoriginal-wrapper{
 
+    a.myoriginal-label.underline-link{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 150px;
+      height: 75px;
+      text-align: center;
+      background-color: #fff;
+      padding: 8px;
+      margin:4px 8px 4px 4px;
+      border-radius: 10px;
+      color: #787C7B;
+      font-weight: bold;
+      font-size: 0.8rem;
+
+
+      .myoriginal-label-text{
+
+      }
+    }
+
+
+}
+
+.manyUrl{
+  display:flex;
+  display: -webkit-box;
+  padding: 4px;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fewUrl{
+  display:flex;
+  padding: 4px;
+  justify-content: center;
+  a.myoriginal-label.underline-link{
+    width: 45%;
+  }
+}
+
+.oneUrl{
+  display:flex;
+  padding: 4px;
+  justify-content: center;
+  a.myoriginal-label.underline-link{
+    width: 100%;
+  }
+}
 
 .store-info-label{
   text-align: center;
@@ -465,6 +599,7 @@ body{
   letter-spacing: 0.4px;
   color: #A7A7A7;
 }
+
 .event-info-wrapper{
   padding: 0 12px 12px 12px;
   //min-height: 100vw;

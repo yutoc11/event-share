@@ -7,6 +7,7 @@
 
       section
 
+      navi-menu
 
       footer.user-footer
         .footer-text.center-text あなたのページをつくりたい方はこちら
@@ -18,12 +19,17 @@
 import firebase from '@/plugins/firebase'
 import store from '~/store/index.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
+import NaviMenu from '~/components/NaviMenu.vue'
 
 export default {
 
   computed:{
     ...mapState(['user']),
     ...mapGetters(['isAuthenticated']),
+  },
+
+  components:{
+    NaviMenu,
   },
 
   methods: {

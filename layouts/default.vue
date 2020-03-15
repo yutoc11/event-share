@@ -15,6 +15,8 @@
       section
         nuxt/
 
+      navi-menu
+
       .term-privacy-footer
         nuxt-link.footer-link.caption.font-weight-bold(to="../terms") 規約
         nuxt-link.footer-link.caption.font-weight-bold(to="../privacy") プライバシーポリシー
@@ -35,6 +37,8 @@
 import firebase from '@/plugins/firebase'
 import store from '~/store/index.js'
 import { mapActions, mapState, mapGetters } from 'vuex'
+import NaviMenu from '~/components/NaviMenu.vue'
+
 
 export default {
 
@@ -47,6 +51,10 @@ export default {
   computed:{
     ...mapState(['user']),
     ...mapGetters(['isAuthenticated']),
+  },
+
+  components:{
+    NaviMenu,
   },
 
   methods: {
@@ -201,6 +209,7 @@ header{
   display: flex;
   justify-content: space-between;
   height: 48px;
+  margin-right: 50px;
 
   .header-logo{
 

@@ -12,7 +12,7 @@
             a.underline-link(:href="'https://intro-me.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + username" target="_blank") 自分のページを確認する
           //.confirm-your-url(v-else-if="isSetuserData && $store.state.userinfo.userName")
             a.underline-link(:href="'https://intro-me.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + $store.state.userinfo.userName" target="_blank") 自分のページを確認する
-          .confirm-your-url(v-if="isSetuserData")
+          .confirm-your-url(v-if="isSetuserData && $store.state.userinfo.userId")
             a.underline-link(:href="'https://intro-me.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
           .copy-your-url(@click="copyMyUrl")
             v-icon(small) file_copy
@@ -185,6 +185,33 @@
                   p(v-if="$store.state.userinfo.userFacebookName") {{ $store.state.userinfo.userFacebookName }}
                   p(v-else) 未設定
 
+            //-note
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper(v-if="isEditNoteName")
+                .user-input-edit
+                  .input-label note 公開ページURL
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="isEditNoteName = false") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userNoteNameChange") 変更する
+                input(v-if="userNoteName" v-model="userNoteName" type="text" name="userNoteName" :placeholder="userNoteName" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userNoteName" v-model="userTwitterName" type="text" name="userNoteName" :placeholder="$store.state.userinfo.userNoteName" autocomplete="off").input-area
+                input(v-else v-model="userNoteName" type="text" name="userNoteName" placeholder="https://note.com/intro_me" autocomplete="off").input-area
+              .user-input-wrapper.account-item-wrapper(v-else-if="userNoteName")
+                .user-input-edit
+                  .input-label note 公開ページURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditNoteName = true") 編集する
+                p(v-if="userNoteName") {{ userNoteName }}
+                p(v-else) 未設定
+              .user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label note 公開ページURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditNoteName = true") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userNoteName") {{ $store.state.userinfo.userNoteName }}
+                  p(v-else) 未設定
+
             //-minne
             .user-input-item-wrapper
               .user-input-wrapper.account-item-wrapper(v-if="isEditMinneName")
@@ -267,6 +294,135 @@
                   p(v-if="$store.state.userinfo.userBaseName") {{ $store.state.userinfo.userBaseName }}
                   p(v-else) 未設定
 
+            //-メルカリ
+            .user-input-item-wrapper
+              .user-input-wrapper.account-item-wrapper(v-if="isEditMercariName")
+                .user-input-edit
+                  .input-label メルカリのURL
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="isEditMercariName = false") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userMercariNameChange") 変更する
+                input(v-if="userMercariName" v-model="userMercariName" type="text" name="userMercariName" :placeholder="userMercariName" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userMercariName" v-model="userMercariName" type="text" name="userMercariName" :placeholder="$store.state.userinfo.userMercariName" autocomplete="off").input-area
+                input(v-else v-model="userMercariName" type="text" name="userMercariName" placeholder="https://www.mercari.com/jp/u/XXXXXXXXX/" autocomplete="off").input-area
+              .user-input-wrapper.account-item-wrapper(v-else-if="userMercariName")
+                .user-input-edit
+                  .input-label メルカリのURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditMercariName = true") 編集する
+                p(v-if="userMercariName") {{ userMercariName }}
+                p(v-else) 未設定
+              .user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label メルカリのURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditMercariName = true") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userMercariName") {{ $store.state.userinfo.userMercariName }}
+                  p(v-else) 未設定
+
+            //-オリジナル1
+            .user-input-item-wrapper
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-if="isEditOriginalName")
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="cancelOriginal") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userOriginalChange") 変更する
+                input(v-if="userOriginalName" v-model="userOriginalName" type="text" name="userOriginalName" :placeholder="userOriginalName" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userOriginalName" v-model="userOriginalName" type="text" name="userOriginalName" :placeholder="$store.state.userinfo.userOriginalName" autocomplete="off").input-area
+                input(v-else v-model="userOriginalName" type="text" name="userOriginalName" placeholder="ショップオリジナルHP" autocomplete="off").input-area
+                input(v-if="userOriginalUrl" v-model="userOriginalUrl" type="text" name="userOriginalUrl" :placeholder="userOriginalUrl" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userOriginalUrl" v-model="userOriginalUrl" type="text" name="userOriginalUrl" :placeholder="$store.state.userinfo.userOriginalUrl" autocomplete="off").input-area
+                input(v-else v-model="userOriginalUrl" type="text" name="userOriginalUrl" placeholder="https://www.Original.com/" autocomplete="off").input-area
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-else-if="userOriginalName")
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditOriginal") 編集する
+                p(v-if="userOriginalName") {{ userOriginalName }}
+                p(v-else) 未設定
+                p(v-if="userOriginalUrl") {{ userOriginalUrl }}
+                p(v-else) 未設定
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditOriginal") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userOriginalName") {{ $store.state.userinfo.userOriginalName }}
+                  p(v-else) 未設定
+                  p(v-if="$store.state.userinfo.userOriginalUrl") {{ $store.state.userinfo.userOriginalUrl }}
+                  p(v-else) 未設定
+
+            //-オリジナル2
+            .user-input-item-wrapper
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-if="isEditOriginalName2")
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL2
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="cancelOriginal2") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userOriginalChange2") 変更する
+                input(v-if="userOriginalName2" v-model="userOriginalName2" type="text" name="userOriginalName2" :placeholder="userOriginalName2" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userOriginalName2" v-model="userOriginalName2" type="text" name="userOriginalName2" :placeholder="$store.state.userinfo.userOriginalName2" autocomplete="off").input-area
+                input(v-else v-model="userOriginalName2" type="text" name="userOriginalName2" placeholder="ショップオリジナルHP" autocomplete="off").input-area
+                input(v-if="userOriginalUrl2" v-model="userOriginalUrl2" type="text" name="userOriginalUrl2" :placeholder="userOriginalUrl2" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userOriginalUrl2" v-model="userOriginalUrl2" type="text" name="userOriginalUrl2" :placeholder="$store.state.userinfo.userOriginalUrl2" autocomplete="off").input-area
+                input(v-else v-model="userOriginalUrl2" type="text" name="userOriginalUrl2" placeholder="https://www.Original.com/" autocomplete="off").input-area
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-else-if="userOriginalName2")
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL2
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditOriginal2") 編集する
+                p(v-if="userOriginalName2") {{ userOriginalName2 }}
+                p(v-else) 未設定
+                p(v-if="userOriginalUrl2") {{ userOriginalUrl2 }}
+                p(v-else) 未設定
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL2
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditOriginal2") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userOriginalName2") {{ $store.state.userinfo.userOriginalName2 }}
+                  p(v-else) 未設定
+                  p(v-if="$store.state.userinfo.userOriginalUrl2") {{ $store.state.userinfo.userOriginalUrl2 }}
+                  p(v-else) 未設定
+
+            //-オリジナル3
+            .user-input-item-wrapper
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-if="isEditOriginalName3")
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL3
+                  .change-button-wrapper
+                    .cancel-button.underline-link(@click="cancelOriginal3") キャンセル
+                    .name-change-button.change-button.underline-link(@click="userOriginalChange3") 変更する
+                input(v-if="userOriginalName3" v-model="userOriginalName3" type="text" name="userOriginalName3" :placeholder="userOriginalName3" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userOriginalName3" v-model="userOriginalName3" type="text" name="userOriginalName3" :placeholder="$store.state.userinfo.userOriginalName3" autocomplete="off").input-area
+                input(v-else v-model="userOriginalName3" type="text" name="userOriginalName3" placeholder="ショップオリジナルHP" autocomplete="off").input-area
+                input(v-if="userOriginalUrl3" v-model="userOriginalUrl3" type="text" name="userOriginalUrl3" :placeholder="userOriginalUrl3" autocomplete="off").input-area
+                input(v-else-if="$store.state.userinfo.userOriginalUrl3" v-model="userOriginalUrl3" type="text" name="userOriginalUrl3" :placeholder="$store.state.userinfo.userOriginalUrl3" autocomplete="off").input-area
+                input(v-else v-model="userOriginalUrl3" type="text" name="userOriginalUrl3" placeholder="https://www.Original.com/" autocomplete="off").input-area
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-else-if="userOriginalName3")
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL3
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditOriginal3") 編集する
+                p(v-if="userOriginalName3") {{ userOriginalName3 }}
+                p(v-else) 未設定
+                p(v-if="userOriginalUrl3") {{ userOriginalUrl3 }}
+                p(v-else) 未設定
+              .origial-input-wrapper.user-input-wrapper.account-item-wrapper(v-else)
+                .user-input-edit
+                  .input-label オリジナルHPの名前とURL3
+                  .change-button-wrapper
+                    .change-button.underline-link(@click="isEditOriginal3") 編集する
+                .username-display(v-if="isSetuserData")
+                  p(v-if="$store.state.userinfo.userOriginalName3") {{ $store.state.userinfo.userOriginalName3 }}
+                  p(v-else) 未設定
+                  p(v-if="$store.state.userinfo.userOriginalUrl3") {{ $store.state.userinfo.userOriginalUrl3 }}
+                  p(v-else) 未設定
+
 
 
 
@@ -322,6 +478,7 @@ import LoadingImage from '~/components/LoadingImage.vue'
 import prefectures from '~/static/prefectures.json'
 import uuid from 'uuid'
 
+
 export default {
   //layout: 'home',
 
@@ -350,12 +507,28 @@ export default {
       userTwitterName: '',
       isEditFacebookName: false,
       userFacebookName: '',
+      isEditNoteName: false,
+      userNoteName: '',
       isEditMinneName: false,
       userMinneName: '',
       isEditCreemaName: false,
       userCreemaName: '',
       isEditBaseName: false,
       userBaseName: '',
+      isEditMercariName: false,
+      userMercariName: '',
+      isEditOriginalName: false,
+      isEditOriginalUrl: false,
+      userOriginalName: '',
+      userOriginalUrl: '',
+      isEditOriginalName2: false,
+      isEditOriginalUrl2: false,
+      userOriginalName2: '',
+      userOriginalUrl2: '',
+      isEditOriginalName3: false,
+      isEditOriginalUrl3: false,
+      userOriginalName3: '',
+      userOriginalUrl3: '',
       uuid: '',
       invalid: false,
       iconImage: '',
@@ -428,6 +601,11 @@ export default {
     }
   },
 
+  beforeCreate: function(){
+
+
+  },
+
   created: function(){
 
     firebase.auth().onAuthStateChanged((user)=> {
@@ -437,43 +615,70 @@ export default {
 
         const db = firebase.firestore();
 
+
+
         db.collection('users').doc(this.user.uid).get().then((doc) =>{
-            console.log('読み取りなう');
-            console.log(doc.data());
-            this.setUserInfo(doc.data());
-            this.userName = doc.data().userName;
-            this.isSetuserData = true;
-            this.iconImage = doc.data().iconUrl;
-            if(!doc.data().iconUrl){
-              this.isLoadingIcon = false;
+
+            if (doc.exists) {
+              console.log('読み取りなう');
+              console.log(doc.data());
+              this.setUserInfo(doc.data());
+              this.userName = doc.data().userName;
+              this.isSetuserData = true;
+              this.iconImage = doc.data().iconUrl;
+              if(!doc.data().iconUrl){
+                this.isLoadingIcon = false;
+              }
+              console.log(this.iconImage)
+              this.coverImage = doc.data().coverUrl;
+              if(!doc.data().coverUrl){
+                this.isLoadingCover = false;
+              }
+              console.log(this.coverImage)
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+                const db = firebase.firestore();
+                const userId = this.$store.state.user.uid;
+                console.log(userId);
+
+                db.collection("users").doc(userId).set({
+                  userId: userId,
+                  }, { merge: true })
+                  .then(() =>{
+                      console.log("変更成功");
+                      this.isSetuserData = true;
+                      this.isLoadingCover = false;
+                      this.isLoadingIcon = false;
+                    }
+                  ).catch(
+                    function(error) {
+                      console.error("Error adding document: ", error);
+                    }
+                  );
             }
-            console.log(this.iconImage)
-            this.coverImage = doc.data().coverUrl;
-            if(!doc.data().coverUrl){
-              this.isLoadingCover = false;
-            }
-            console.log(this.coverImage)
           }
         )
 
         db.collection('users').doc(this.user.uid).collection('events').orderBy("eventEndDate", "desc")
            .get().then((querySnapshot) => {
-             console.log(querySnapshot)
-             console.log(querySnapshot.docs)
-             this.events = [];
-             querySnapshot.forEach((doc) => {
-                 console.log('ページ読み込み時のリスト読み取りなう');
-                 console.log(doc.data());
-                 this.events.push(doc.data())
-               }
-             );
-
+             if(querySnapshot.exists){
+               console.log(querySnapshot)
+               console.log(querySnapshot.docs)
+               this.events = [];
+               querySnapshot.forEach((doc) => {
+                   console.log('ページ読み込み時のリスト読み取りなう');
+                   console.log(doc.data());
+                   this.events.push(doc.data())
+                 }
+               );
+             }
              })
              .catch(function(error) {
                console.log("Error getting documents: ", error);
              });
       }else{
-          this.$router.push('/')
+        this.$router.push('/')
       }
     })
 
@@ -761,6 +966,32 @@ export default {
       this.isEditFacebookName = false;
     },
 
+    userNoteNameChange(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userNoteName = this.userNoteName;
+      console.log(userNoteName);
+
+      if(userNoteName != null){
+        this.$store.state.userinfo.userNoteName = userNoteName;
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userNoteName: userNoteName,
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.isEditNoteName = false;
+    },
+
     userMinneNameChange(){
       const db = firebase.firestore();
       const userId = this.$store.state.user.uid;
@@ -838,6 +1069,150 @@ export default {
       }
       this.isEditBaseName = false;
     },
+
+    userMercariNameChange(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userMercariName = this.userMercariName;
+      console.log(userMercariName);
+
+      if(userMercariName != null){
+        this.$store.state.userinfo.userMercariName = userMercariName;
+        db.collection("users").doc(userId).set({
+          userId: userId,
+          userMercariName: userMercariName,
+          }, { merge: true })
+          .then(
+            function() {
+              console.log("変更成功");
+            }
+          ).catch(
+            function(error) {
+              console.error("Error adding document: ", error);
+            }
+          );
+      }
+      this.isEditMercariName = false;
+    },
+
+    isEditOriginal(){
+      this.isEditOriginalName = true;
+      this.isEditOriginalUrl = true;
+    },
+
+    cancelOriginal(){
+      this.isEditOriginalName = false;
+      this.isEditOriginalUrl = false;
+    },
+
+    userOriginalChange(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userOriginalName = this.userOriginalName;
+      console.log(userOriginalName);
+      const userOriginalUrl = this.userOriginalUrl;
+      console.log(userOriginalUrl);
+
+      this.$store.state.userinfo.userOriginalName = userOriginalName;
+      this.$store.state.userinfo.userOriginalUrl = userOriginalUrl;
+      db.collection("users").doc(userId).set({
+        userId: userId,
+        userOriginalName: userOriginalName,
+        userOriginalUrl: userOriginalUrl,
+        }, { merge: true })
+        .then(
+          function() {
+            console.log("変更成功");
+          }
+        ).catch(
+          function(error) {
+            console.error("Error adding document: ", error);
+          }
+        );
+      this.isEditOriginalName = false;
+      this.isEditOriginalUrl = false;
+    },
+
+    isEditOriginal2(){
+      this.isEditOriginalName2 = true;
+      this.isEditOriginalUrl2 = true;
+    },
+
+    cancelOriginal2(){
+      this.isEditOriginalName2 = false;
+      this.isEditOriginalUrl2 = false;
+    },
+
+    userOriginalChange2(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userOriginalName2 = this.userOriginalName2;
+      console.log(userOriginalName2);
+      const userOriginalUrl2 = this.userOriginalUrl2;
+      console.log(userOriginalUrl2);
+
+      this.$store.state.userinfo.userOriginalName2 = userOriginalName2;
+      this.$store.state.userinfo.userOriginalUrl2 = userOriginalUrl2;
+      db.collection("users").doc(userId).set({
+        userId: userId,
+        userOriginalName2: userOriginalName2,
+        userOriginalUrl2: userOriginalUrl2,
+        }, { merge: true })
+        .then(
+          function() {
+            console.log("変更成功");
+          }
+        ).catch(
+          function(error) {
+            console.error("Error adding document: ", error);
+          }
+        );
+      this.isEditOriginalName2 = false;
+      this.isEditOriginalUrl2 = false;
+    },
+
+    isEditOriginal3(){
+      this.isEditOriginalName3 = true;
+      this.isEditOriginalUrl3 = true;
+    },
+
+    cancelOriginal3(){
+      this.isEditOriginalName3 = false;
+      this.isEditOriginalUrl3 = false;
+    },
+
+    userOriginalChange3(){
+      const db = firebase.firestore();
+      const userId = this.$store.state.user.uid;
+      console.log(userId);
+      const userOriginalName3 = this.userOriginalName3;
+      console.log(userOriginalName3);
+      const userOriginalUrl3 = this.userOriginalUrl3;
+      console.log(userOriginalUrl3);
+
+      this.$store.state.userinfo.userOriginalName3 = userOriginalName3;
+      this.$store.state.userinfo.userOriginalUrl3 = userOriginalUrl3;
+      db.collection("users").doc(userId).set({
+        userId: userId,
+        userOriginalName3: userOriginalName3,
+        userOriginalUrl3: userOriginalUrl3,
+        }, { merge: true })
+        .then(
+          function() {
+            console.log("変更成功");
+          }
+        ).catch(
+          function(error) {
+            console.error("Error adding document: ", error);
+          }
+        );
+      this.isEditOriginalName3 = false;
+      this.isEditOriginalUrl3 = false;
+    },
+
 
     userSetting(){
       const db = firebase.firestore();
@@ -1053,6 +1428,10 @@ export default {
       border-bottom: 1px solid #ccc;
     }
     .user-input-item-wrapper{
+
+      .user-input-wrapper.origial-input-wrapper{
+        min-height: 100px;
+      }
 
       .user-input-wrapper{
         min-height: 65px;
