@@ -47,7 +47,7 @@
                   .input-label ユーザー名
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="usernameCheck") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="usernameCheck") 変更確定
                 input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="username")
                 .user-input-edit
@@ -77,7 +77,7 @@
               .icon-change-wrapper(v-show="iconImage")
                 user-icon(:iconImage="iconImage" :isDashbord="isDashbord" v-on:iconChange="imageChange" @loadedIcon="loadedIcon")
                 .change-button-wrapper
-                  .change-button.underline-link(v-if="iconPreviewImage" @click="fileUpload('icon')") 変更する
+                  .change-button.underline-link.confirm-button(v-if="iconPreviewImage" @click="fileUpload('icon')") 変更確定
 
               .icon-unsetting-wrapper(v-if="!iconImage && !isLoadingIcon")
                 .icon-upload-wrapper.upload-wrapper
@@ -96,7 +96,7 @@
               .cover-change-wrapper(v-show="coverImage")
                 user-cover(:coverImage="coverImage" :isDashbord="isDashbord" v-on:coverChange="imageChange" @loadedCover="loadedCover")
                 .change-button-wrapper
-                  .change-button.underline-link(v-if="coverPreviewImage" @click="fileUpload('cover')") 変更する
+                  .change-button.underline-link.confirm-button(v-if="coverPreviewImage" @click="fileUpload('cover')") 変更確定
 
               .cover-unsetting-wrapper.upload-wrapper(v-if="!coverImage && !isLoadingCover")
                 .cover-upload-icon-wrapper
@@ -111,7 +111,7 @@
                   .input-label Instagramユーザー名
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditInstaName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userInstaNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userInstaNameChange") 変更確定
                 input(v-if="userInstaName" v-model="userInstaName" type="text" name="userInstaName" :placeholder="userInstaName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userInstaName" v-model="userInstaName" type="text" name="userInstaName" :placeholder="$store.state.userinfo.userInstaName" autocomplete="off").input-area
                 input(v-else v-model="userInstaName" type="text" name="userInstaName" placeholder="event_share" autocomplete="off").input-area
@@ -138,7 +138,7 @@
                   .input-label Twitterユーザー名
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditTwitterName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userTwitterNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userTwitterNameChange") 変更確定
                 input(v-if="userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" :placeholder="userTwitterName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" :placeholder="$store.state.userinfo.userTwitterName" autocomplete="off").input-area
                 input(v-else v-model="userTwitterName" type="text" name="userTwitterName" placeholder="event_share" autocomplete="off").input-area
@@ -162,23 +162,23 @@
             .user-input-item-wrapper
               .user-input-wrapper.account-item-wrapper(v-if="isEditFacebookName")
                 .user-input-edit
-                  .input-label facebook 公開ページURL
+                  .input-label facebook URL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditFacebookName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userFacebookNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userFacebookNameChange") 変更確定
                 input(v-if="userFacebookName" v-model="userFacebookName" type="text" name="userFacebookName" :placeholder="userFacebookName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userFacebookName" v-model="userTwitterName" type="text" name="userFacebookName" :placeholder="$store.state.userinfo.userFacebookName" autocomplete="off").input-area
                 input(v-else v-model="userFacebookName" type="text" name="userFacebookName" placeholder="https://www.facebook.com/event_share/" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userFacebookName")
                 .user-input-edit
-                  .input-label facebook 公開ページURL
+                  .input-label facebook URL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditFacebookName = true") 編集する
                 p(v-if="userFacebookName") {{ userFacebookName }}
                 p(v-else) 未設定
               .user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
-                  .input-label facebook 公開ページURL
+                  .input-label facebook URL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditFacebookName = true") 編集する
                 .username-display(v-if="isSetuserData")
@@ -189,23 +189,23 @@
             .user-input-item-wrapper
               .user-input-wrapper.account-item-wrapper(v-if="isEditNoteName")
                 .user-input-edit
-                  .input-label note 公開ページURL
+                  .input-label note URL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditNoteName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userNoteNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userNoteNameChange") 変更確定
                 input(v-if="userNoteName" v-model="userNoteName" type="text" name="userNoteName" :placeholder="userNoteName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userNoteName" v-model="userTwitterName" type="text" name="userNoteName" :placeholder="$store.state.userinfo.userNoteName" autocomplete="off").input-area
                 input(v-else v-model="userNoteName" type="text" name="userNoteName" placeholder="https://note.com/intro_me" autocomplete="off").input-area
               .user-input-wrapper.account-item-wrapper(v-else-if="userNoteName")
                 .user-input-edit
-                  .input-label note 公開ページURL
+                  .input-label note URL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditNoteName = true") 編集する
                 p(v-if="userNoteName") {{ userNoteName }}
                 p(v-else) 未設定
               .user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
-                  .input-label note 公開ページURL
+                  .input-label note URL
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditNoteName = true") 編集する
                 .username-display(v-if="isSetuserData")
@@ -219,7 +219,7 @@
                   .input-label minneのショップURL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditMinneName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userMinneNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userMinneNameChange") 変更確定
                 input(v-if="userMinneName" v-model="userMinneName" type="text" name="userMinneName" :placeholder="userMinneName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userMinneName" v-model="userMinneName" type="text" name="userMinneName" :placeholder="$store.state.userinfo.userMinneName" autocomplete="off").input-area
                 input(v-else v-model="userMinneName" type="text" name="userMinneName" placeholder="https://minne.com/event_share" autocomplete="off").input-area
@@ -247,7 +247,7 @@
                   .input-label CreemaのショップURL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditCreemaName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userCreemaNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userCreemaNameChange") 変更確定
                 input(v-if="userCreemaName" v-model="userCreemaName" type="text" name="userCreemaName" :placeholder="userCreemaName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userCreemaName" v-model="userCreemaName" type="text" name="userCreemaName" :placeholder="$store.state.userinfo.userCreemaName" autocomplete="off").input-area
                 input(v-else v-model="userCreemaName" type="text" name="userCreemaName" placeholder="https://www.creema.jp/creator/000000" autocomplete="off").input-area
@@ -274,7 +274,7 @@
                   .input-label BASEのショップURL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditBaseName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userBaseNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userBaseNameChange") 変更確定
                 input(v-if="userBaseName" v-model="userBaseName" type="text" name="userBaseName" :placeholder="userBaseName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userBaseName" v-model="userBaseName" type="text" name="userBaseName" :placeholder="$store.state.userinfo.userBaseName" autocomplete="off").input-area
                 input(v-else v-model="userBaseName" type="text" name="userBaseName" placeholder="https://event-share.thebase.in/" autocomplete="off").input-area
@@ -301,7 +301,7 @@
                   .input-label メルカリのURL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="isEditMercariName = false") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userMercariNameChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userMercariNameChange") 変更確定
                 input(v-if="userMercariName" v-model="userMercariName" type="text" name="userMercariName" :placeholder="userMercariName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userMercariName" v-model="userMercariName" type="text" name="userMercariName" :placeholder="$store.state.userinfo.userMercariName" autocomplete="off").input-area
                 input(v-else v-model="userMercariName" type="text" name="userMercariName" placeholder="https://www.mercari.com/jp/u/XXXXXXXXX/" autocomplete="off").input-area
@@ -328,7 +328,7 @@
                   .input-label オリジナルHPの名前とURL
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="cancelOriginal") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userOriginalChange") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userOriginalChange") 変更確定
                 input(v-if="userOriginalName" v-model="userOriginalName" type="text" name="userOriginalName" :placeholder="userOriginalName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userOriginalName" v-model="userOriginalName" type="text" name="userOriginalName" :placeholder="$store.state.userinfo.userOriginalName" autocomplete="off").input-area
                 input(v-else v-model="userOriginalName" type="text" name="userOriginalName" placeholder="ショップオリジナルHP" autocomplete="off").input-area
@@ -362,7 +362,7 @@
                   .input-label オリジナルHPの名前とURL2
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="cancelOriginal2") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userOriginalChange2") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userOriginalChange2") 変更確定
                 input(v-if="userOriginalName2" v-model="userOriginalName2" type="text" name="userOriginalName2" :placeholder="userOriginalName2" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userOriginalName2" v-model="userOriginalName2" type="text" name="userOriginalName2" :placeholder="$store.state.userinfo.userOriginalName2" autocomplete="off").input-area
                 input(v-else v-model="userOriginalName2" type="text" name="userOriginalName2" placeholder="ショップオリジナルHP" autocomplete="off").input-area
@@ -396,7 +396,7 @@
                   .input-label オリジナルHPの名前とURL3
                   .change-button-wrapper
                     .cancel-button.underline-link(@click="cancelOriginal3") キャンセル
-                    .name-change-button.change-button.underline-link(@click="userOriginalChange3") 変更する
+                    .name-change-button.change-button.underline-link.confirm-button(@click="userOriginalChange3") 変更確定
                 input(v-if="userOriginalName3" v-model="userOriginalName3" type="text" name="userOriginalName3" :placeholder="userOriginalName3" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userOriginalName3" v-model="userOriginalName3" type="text" name="userOriginalName3" :placeholder="$store.state.userinfo.userOriginalName3" autocomplete="off").input-area
                 input(v-else v-model="userOriginalName3" type="text" name="userOriginalName3" placeholder="ショップオリジナルHP" autocomplete="off").input-area
@@ -1463,6 +1463,12 @@ export default {
       .name-change-button{
         margin-left: 10px;
       }
+    }
+
+    .underline-link.confirm-button{
+      color: #FF0000;
+      font-weight: bold;
+      font-size: 0.9rem;
     }
 
 
