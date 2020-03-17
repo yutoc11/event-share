@@ -614,6 +614,7 @@ export default {
         this.$router.push("/dashbord")
 
         const db = firebase.firestore();
+        console.log('イベント読み取り前！')
 
 
 
@@ -662,7 +663,7 @@ export default {
 
         db.collection('users').doc(this.user.uid).collection('events').orderBy("eventEndDate", "desc")
            .get().then((querySnapshot) => {
-             if(querySnapshot.exists){
+               console.log('イベント読み取るよ！')
                console.log(querySnapshot)
                console.log(querySnapshot.docs)
                this.events = [];
@@ -672,11 +673,11 @@ export default {
                    this.events.push(doc.data())
                  }
                );
-             }
              })
              .catch(function(error) {
                console.log("Error getting documents: ", error);
              });
+
       }else{
         this.$router.push('/')
       }
