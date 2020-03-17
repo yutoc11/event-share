@@ -546,6 +546,7 @@ export default {
       deletedPastEvents: false,
       event: '',
       isExistUserName: false,
+      setUserInfoLocal: false
     };
   },
 
@@ -587,6 +588,7 @@ export default {
         return myUrl;
       }
     },
+
   },
 
   watch: {
@@ -597,6 +599,27 @@ export default {
         //本当はよくない処理
         setTimeout(this.getUserInfo,1000);
         this.isChangeUserData  = false;
+      }
+    },
+
+    setUserInfoLocal: function(){
+      if(this.isSetuserData){
+        console.log('storeユーザーをけんち')
+        this.username = this.$store.state.userinfo.userName;
+        this.userInstaName = this.$store.state.userinfo.userInstaName;
+        this.userTwitterName = this.$store.state.userinfo.userTwitterName;
+        this.userFacebookName = this.$store.state.userinfo.userFacebookName;
+        this.userNoteName = this.$store.state.userinfo.userNoteName;
+        this.userMinneName = this.$store.state.userinfo.userMinneName;
+        this.userCreemaName = this.$store.state.userinfo.userCreemaName;
+        this.userBaseName = this.$store.state.userinfo.userBaseName;
+        this.userMercariName = this.$store.state.userinfo.userMercariName;
+        this.userOriginalName = this.$store.state.userinfo.userOriginalName;
+        this.userOriginalUrl = this.$store.state.userinfo.userOriginalUrl;
+        this.userOriginalName2 = this.$store.state.userinfo.userOriginalName2;
+        this.userOriginalUrl2 = this.$store.state.userinfo.userOriginalUrl2;
+        this.userOriginalName3 = this.$store.state.userinfo.userOriginalName3;
+        this.userOriginalUrl3 = this.$store.state.userinfo.userOriginalUrl3;
       }
     }
   },
@@ -636,6 +659,7 @@ export default {
                 this.isLoadingCover = false;
               }
               console.log(this.coverImage)
+              this.setUserInfoLocal = true;
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
