@@ -302,9 +302,40 @@ export default {
   },
 
   created: function(){
-    //this.userName = this.$route.path.slice(1);
-    //console.log(this.userName)
-    //const db = firebase.firestore();
+    this.userName = this.$route.path.slice(1);
+    console.log(this.userName)
+    const db = firebase.firestore();
+
+    if(this.isLoadingEvents){
+      db.collection('users').where("userName", "==", this.userName)
+         .get().then((querySnapshot) => {
+           querySnapshot.forEach((doc) => {
+
+               this.isCatchData = true;
+               this.userOpenData = doc.data();
+               if(!this.userOpenData.coverUrl){
+                 this.isLoadingCover = false;
+               }
+               if(!this.userOpenData.iconUrl){
+                 this.isLoadingIcon = false;
+               }
+               console.log(this.userOpenData)
+               console.log(this.isCatchData)
+               console.log('↑キャッチしたよ！')
+               setTimeout(this.getEvents,100);
+
+             }
+           );
+
+           }).catch(
+
+             this.passUserId = true,
+
+             function(error) {
+
+             console.log("Error getting documents: ", error);
+           });
+    }
   },
 
   beforeMount: function(){

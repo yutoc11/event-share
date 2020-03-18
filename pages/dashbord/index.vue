@@ -8,11 +8,11 @@
         .your-url あなたのURL
         .your-url {{ myUrl }}
         .confirm-wrapper(v-show="isSetuserData")
-          //.confirm-your-url(v-if="username")
-            a.underline-link(:href="'https://intro-me.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + username" target="_blank") 自分のページを確認する
-          //.confirm-your-url(v-else-if="isSetuserData && $store.state.userinfo.userName")
-            a.underline-link(:href="'https://intro-me.net/'+ this.$store.state.user.uid.slice(24) + '--user@' + $store.state.userinfo.userName" target="_blank") 自分のページを確認する
-          .confirm-your-url(v-if="isSetuserData && $store.state.userinfo.userId")
+          .confirm-your-url(v-if="username")
+            a.underline-link(:href="'https://intro-me.net/'+ username" target="_blank") 自分のページを確認する
+          .confirm-your-url(v-else-if="isSetuserData && $store.state.userinfo.userName")
+            a.underline-link(:href="'https://intro-me.net/'+ $store.state.userinfo.userName" target="_blank") 自分のページを確認する
+          .confirm-your-url(v-else-if="isSetuserData && $store.state.userinfo.userId")
             a.underline-link(:href="'https://intro-me.net/'+ $store.state.userinfo.userId" target="_blank") 自分のページを確認する
           .copy-your-url(@click="copyMyUrl")
             v-icon(small) file_copy
@@ -878,7 +878,6 @@ export default {
 
       const db = firebase.firestore();
       let userName = this.username;
-      //let userName = 'input--area';
       console.log(userName);
       console.log('ユーザーネームチェック！');
 
