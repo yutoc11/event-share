@@ -42,20 +42,26 @@
                   p(v-if="$store.state.user.email") {{ $store.state.user.email }}
 
             .user-input-item-wrapper
-              .user-input-wrapper.account-item-wrapper(v-if="isEditName")
+              .user-name-wrapper.user-input-wrapper.account-item-wrapper(v-if="isEditName")
                 .user-input-edit
                   .input-label ユーザー名
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditName = false") キャンセル
-                    .name-change-button.change-button.underline-link.confirm-button(@click="usernameCheck") 変更確定
-                input(v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
-              .user-input-wrapper.account-item-wrapper(v-else-if="username")
+                    .cancel-button.underline-link(@click="cancelChangeUserName") キャンセル
+                    .name-change-button.change-button.unconfirm-button(v-if="!isNameUnique") 未チェック
+                    .name-change-button.change-button.underline-link.confirm-button(v-else @click="usernameChange") 変更確定
+                input(@input="updateValue" v-model="username" type="text" name="username" placeholder="" autocomplete="off").input-area
+                .user-name-check-wrapper
+                  .underline-link(@click="usernameCheck") ( 必須 ) 利用可能かチェック
+                  .user-name-check-rusult(v-if="!isCheckName") ：未チェック
+                  .user-name-check-rusult(v-else-if="isCheckName && !isNameUnique") ：利用不可
+                  .user-name-check-rusult(v-else-if="isCheckName && isNameUnique") ：利用可能
+              .user-name-wrapper.user-input-wrapper.account-item-wrapper(v-else-if="username")
                 .user-input-edit
                   .input-label ユーザー名
                   .change-button-wrapper
                     .change-button.underline-link(@click="isEditName = true") 編集する
                 p(v-if="username") {{ username }}
-              .user-input-wrapper.account-item-wrapper(v-else)
+              .user-name-wrapper.user-input-wrapper.account-item-wrapper(v-else)
                 .user-input-edit
                   .input-label ユーザー名
                   .change-button-wrapper
@@ -110,7 +116,7 @@
                 .user-input-edit
                   .input-label Instagramユーザー名
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditInstaName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditInstaName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userInstaNameChange") 変更確定
                 input(v-if="userInstaName" v-model="userInstaName" type="text" name="userInstaName" :placeholder="userInstaName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userInstaName" v-model="userInstaName" type="text" name="userInstaName" :placeholder="$store.state.userinfo.userInstaName" autocomplete="off").input-area
@@ -137,7 +143,7 @@
                 .user-input-edit
                   .input-label Twitterユーザー名
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditTwitterName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditTwitterName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userTwitterNameChange") 変更確定
                 input(v-if="userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" :placeholder="userTwitterName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userTwitterName" v-model="userTwitterName" type="text" name="userTwitterName" :placeholder="$store.state.userinfo.userTwitterName" autocomplete="off").input-area
@@ -164,7 +170,7 @@
                 .user-input-edit
                   .input-label facebook URL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditFacebookName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditFacebookName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userFacebookNameChange") 変更確定
                 input(v-if="userFacebookName" v-model="userFacebookName" type="text" name="userFacebookName" :placeholder="userFacebookName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userFacebookName" v-model="userTwitterName" type="text" name="userFacebookName" :placeholder="$store.state.userinfo.userFacebookName" autocomplete="off").input-area
@@ -191,7 +197,7 @@
                 .user-input-edit
                   .input-label note URL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditNoteName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditNoteName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userNoteNameChange") 変更確定
                 input(v-if="userNoteName" v-model="userNoteName" type="text" name="userNoteName" :placeholder="userNoteName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userNoteName" v-model="userTwitterName" type="text" name="userNoteName" :placeholder="$store.state.userinfo.userNoteName" autocomplete="off").input-area
@@ -218,7 +224,7 @@
                 .user-input-edit
                   .input-label minneのショップURL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditMinneName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditMinneName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userMinneNameChange") 変更確定
                 input(v-if="userMinneName" v-model="userMinneName" type="text" name="userMinneName" :placeholder="userMinneName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userMinneName" v-model="userMinneName" type="text" name="userMinneName" :placeholder="$store.state.userinfo.userMinneName" autocomplete="off").input-area
@@ -246,7 +252,7 @@
                 .user-input-edit
                   .input-label CreemaのショップURL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditCreemaName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditCreemaName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userCreemaNameChange") 変更確定
                 input(v-if="userCreemaName" v-model="userCreemaName" type="text" name="userCreemaName" :placeholder="userCreemaName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userCreemaName" v-model="userCreemaName" type="text" name="userCreemaName" :placeholder="$store.state.userinfo.userCreemaName" autocomplete="off").input-area
@@ -273,7 +279,7 @@
                 .user-input-edit
                   .input-label BASEのショップURL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditBaseName = false") キャンセル
+                    .cancel-button.underline-link(@click="isEditBaseName = false; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userBaseNameChange") 変更確定
                 input(v-if="userBaseName" v-model="userBaseName" type="text" name="userBaseName" :placeholder="userBaseName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userBaseName" v-model="userBaseName" type="text" name="userBaseName" :placeholder="$store.state.userinfo.userBaseName" autocomplete="off").input-area
@@ -300,8 +306,8 @@
                 .user-input-edit
                   .input-label メルカリのURL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="isEditMercariName = false") キャンセル
-                    .name-change-button.change-button.underline-link.confirm-button(@click="userMercariNameChange") 変更確定
+                    .cancel-button.underline-link(@click="isEditMercariName = false; commonCencel()") キャンセル
+                    .name-change-button.change-button.underline-link.confirm-button(@clicisNameUniquek="userMercariNameChange") 変更確定
                 input(v-if="userMercariName" v-model="userMercariName" type="text" name="userMercariName" :placeholder="userMercariName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userMercariName" v-model="userMercariName" type="text" name="userMercariName" :placeholder="$store.state.userinfo.userMercariName" autocomplete="off").input-area
                 input(v-else v-model="userMercariName" type="text" name="userMercariName" placeholder="https://www.mercari.com/jp/u/XXXXXXXXX/" autocomplete="off").input-area
@@ -327,7 +333,7 @@
                 .user-input-edit
                   .input-label オリジナルHPの名前とURL
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="cancelOriginal") キャンセル
+                    .cancel-button.underline-link(@click="cancelOriginal; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userOriginalChange") 変更確定
                 input(v-if="userOriginalName" v-model="userOriginalName" type="text" name="userOriginalName" :placeholder="userOriginalName" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userOriginalName" v-model="userOriginalName" type="text" name="userOriginalName" :placeholder="$store.state.userinfo.userOriginalName" autocomplete="off").input-area
@@ -361,7 +367,7 @@
                 .user-input-edit
                   .input-label オリジナルHPの名前とURL2
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="cancelOriginal2") キャンセル
+                    .cancel-button.underline-link(@click="cancelOriginal2; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userOriginalChange2") 変更確定
                 input(v-if="userOriginalName2" v-model="userOriginalName2" type="text" name="userOriginalName2" :placeholder="userOriginalName2" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userOriginalName2" v-model="userOriginalName2" type="text" name="userOriginalName2" :placeholder="$store.state.userinfo.userOriginalName2" autocomplete="off").input-area
@@ -395,7 +401,7 @@
                 .user-input-edit
                   .input-label オリジナルHPの名前とURL3
                   .change-button-wrapper
-                    .cancel-button.underline-link(@click="cancelOriginal3") キャンセル
+                    .cancel-button.underline-link(@click="cancelOriginal3; commonCencel()") キャンセル
                     .name-change-button.change-button.underline-link.confirm-button(@click="userOriginalChange3") 変更確定
                 input(v-if="userOriginalName3" v-model="userOriginalName3" type="text" name="userOriginalName3" :placeholder="userOriginalName3" autocomplete="off").input-area
                 input(v-else-if="$store.state.userinfo.userOriginalName3" v-model="userOriginalName3" type="text" name="userOriginalName3" :placeholder="$store.state.userinfo.userOriginalName3" autocomplete="off").input-area
@@ -546,7 +552,9 @@ export default {
       deletedPastEvents: false,
       event: '',
       isExistUserName: false,
-      setUserInfoLocal: false
+      setUserInfoLocal: false,
+      isCheckName: false,
+      isNameUnique: false,
     };
   },
 
@@ -851,36 +859,47 @@ export default {
 
     },
 
+    updateValue(){
+      console.log('インプット変わったなう')
+      this.isCheckName = false;
+      this.isNameUnique = false;
+    },
+
+    cancelChangeUserName(){
+      this.commonCencel();
+      console.log('commonCencelされた？')
+      this.isEditName = false
+      this.isCheckName = false;
+      this.isNameUnique = false;
+
+    },
+
     usernameCheck(){
 
       const db = firebase.firestore();
       let userName = this.username;
+      //let userName = 'input--area';
       console.log(userName);
       console.log('ユーザーネームチェック！');
 
-      db.collection('users').where("userName", "==", this.userName)
+      db.collection('users').where("userName", "==", userName)
          .get().then( (querySnapshot) => {
-
-             if(querySnapshot.length){
-               querySnapshot.forEach( (doc) =>
-                  {
-
-                    //this.isExistUserName = true,
-                    //console.log(this.isExistUserName),
-                    //resolve('deplicated!')
-                    console.log('↑ダブりネームキャッチしたよ！')
-                  }
-               );
-             }else{
-               //reject('unique!')
-               console.log('ダブりなし')
+           console.log('ここはいつ？')
+             if(querySnapshot){
+               console.log('querySnapshot')
+               console.log(querySnapshot.docs.length)
+               if(querySnapshot.docs.length > 0 ){
+                 console.log('ダブりなう')
+                 this.isCheckName = true;
+               }else{
+                 console.log('ダブりなし')
+                 this.isCheckName = true;
+                 this.isNameUnique = true;
+               }
              }
 
            }).catch(
-              this.usernameChange(),
-              console.log("usernameChangeなう"),
            ).finally(()=>{
-
              });
     },
 
@@ -900,12 +919,16 @@ export default {
           userName: userName,
           }, { merge: true })
           .then(
-            function() {
+            () => {
               console.log("変更成功");
+              this.isCheckName = false;
+              this.isNameUnique = false;
             }
           ).catch(
-            function(error) {
+            () => {
               console.error("Error adding document: ", error);
+              this.isCheckName = false;
+              this.isNameUnique = false;
             }
           );
       }
@@ -1129,6 +1152,7 @@ export default {
     cancelOriginal(){
       this.isEditOriginalName = false;
       this.isEditOriginalUrl = false;
+      this.commonCencel();
     },
 
     userOriginalChange(){
@@ -1168,6 +1192,7 @@ export default {
     cancelOriginal2(){
       this.isEditOriginalName2 = false;
       this.isEditOriginalUrl2 = false;
+      this.commonCencel();
     },
 
     userOriginalChange2(){
@@ -1207,6 +1232,7 @@ export default {
     cancelOriginal3(){
       this.isEditOriginalName3 = false;
       this.isEditOriginalUrl3 = false;
+      this.commonCencel();
     },
 
     userOriginalChange3(){
@@ -1236,6 +1262,24 @@ export default {
         );
       this.isEditOriginalName3 = false;
       this.isEditOriginalUrl3 = false;
+    },
+
+    commonCencel(){
+      this.username = this.$store.state.userinfo.userName;
+      this.userInstaName = this.$store.state.userinfo.userInstaName;
+      this.userTwitterName = this.$store.state.userinfo.userTwitterName;
+      this.userFacebookName = this.$store.state.userinfo.userFacebookName;
+      this.userNoteName = this.$store.state.userinfo.userNoteName;
+      this.userMinneName = this.$store.state.userinfo.userMinneName;
+      this.userCreemaName = this.$store.state.userinfo.userCreemaName;
+      this.userBaseName = this.$store.state.userinfo.userBaseName;
+      this.userMercariName = this.$store.state.userinfo.userMercariName;
+      this.userOriginalName = this.$store.state.userinfo.userOriginalName;
+      this.userOriginalUrl = this.$store.state.userinfo.userOriginalUrl;
+      this.userOriginalName2 = this.$store.state.userinfo.userOriginalName2;
+      this.userOriginalUrl2 = this.$store.state.userinfo.userOriginalUrl2;
+      this.userOriginalName3 = this.$store.state.userinfo.userOriginalName3;
+      this.userOriginalUrl3 = this.$store.state.userinfo.userOriginalUrl3;
     },
 
 
@@ -1459,6 +1503,24 @@ export default {
         min-height: 100px;
       }
 
+      .user-input-wrapper.user-name-wrapper{
+        min-height: 80px;
+
+        .user-name-check-wrapper{
+
+          display: flex;
+          .underline-link{
+
+          }
+
+          .user-name-check-rusult{
+            font-size: 0.8rem;
+            color: #565656;
+          }
+        }
+
+      }
+
       .user-input-wrapper{
         min-height: 65px;
 
@@ -1493,6 +1555,11 @@ export default {
     .underline-link.confirm-button{
       color: #FF0000;
       font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .unconfirm-button{
+      color: #ccc;
       font-size: 0.9rem;
     }
 
