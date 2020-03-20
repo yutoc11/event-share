@@ -575,26 +575,27 @@ export default {
     ...mapGetters(['isAuthenticated']),
 
     myUrl: function () {
-      //if(this.isSetuserData){
-        //if(this.$store.state.userinfo.userName){
-        //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.$store.state.userinfo.userName;
-        //  console.log("this.$store.state.userinfo.userName")
-        //  return myUrl;
-        //}else if(this.username){
-        //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid.slice(24) + '--user@' + this.username;
-        //  console.log("this.username")
-        //  return myUrl;
-        //}else{
-        //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid;
-        //  console.log("this.$store.state.user.uid")
-        //  return myUrl;
-        //}
-      //}
       if(this.isSetuserData){
-        let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid;
-        console.log("this.$store.state.user.uid")
-        return myUrl;
+        if(this.username){
+          let myUrl = 'https://intro-me.net/' + this.username;
+          console.log("this.username")
+          return myUrl;
+
+        }else if(this.$store.state.userinfo.userName){
+          let myUrl = 'https://intro-me.net/' + this.$store.state.userinfo.userName;
+          console.log("this.$store.state.userinfo.userName")
+          return myUrl;
+        }else{
+          let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid;
+          console.log("this.$store.state.user.uid")
+          return myUrl;
+        }
       }
+      //if(this.isSetuserData){
+      //  let myUrl = 'https://intro-me.net/' + this.$store.state.user.uid;
+      //  console.log("this.$store.state.user.uid")
+      //  return myUrl;
+      //}
     },
 
   },
@@ -741,10 +742,16 @@ export default {
     },
 
     copyMyUrl() {
-      //let myEventUrl = this.username ? 'https://intro-me.net/'+ this.username : 'https://intro-me.net/'+ this.$store.state.userinfo.userName;
-      let myEventUrl = 'https://intro-me.net/'+ this.$store.state.userinfo.userId;
-      this.$copyText(myEventUrl)
-      console.log(myEventUrl)
+      if(this.username || this.$store.state.userinfo.userName){
+        console.log('名前をキャッチ！')
+        let myEventUrl = this.username ? 'https://intro-me.net/'+ this.username : 'https://intro-me.net/'+ this.$store.state.userinfo.userName;
+        this.$copyText(myEventUrl)
+        console.log(myEventUrl)
+      }else{
+        let myEventUrl = 'https://intro-me.net/'+ this.$store.state.userinfo.userId;
+        this.$copyText(myEventUrl)
+        console.log(myEventUrl)
+      }
       //this.$parent.flash_message = "コピーしました"
       //setTimeout(this.clearMessage,3000)
 
