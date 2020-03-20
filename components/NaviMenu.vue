@@ -10,9 +10,11 @@ Menu
         a(id="about" href="https://osaoyuto.thebase.in/" target="_blank")
           span ハンドメイド作家さま向け<br>お役立ちショップ（外部リンク）
 
-        nuxt-link.common-button.open-mypage(v-if="!isAuthenticated" to="/" target="_blank") じぶんのページをつくる
-        .common-button.open-mypage(v-else="isAuthenticated" @click="logOut") ログアウト
-</template>
+        nuxt-link.common-button.nav-link(v-if="!isAuthenticated" to="/" target="_blank") じぶんのページをつくる
+        .user-navi-link(v-else)
+          nuxt-link.common-button.nav-link(to="/dashbord") マイページへ
+          .common-button.nav-link(@click="logOut") ログアウト
+  </template>
 
 <script>
 import { Slide } from 'vue-burger-menu'
@@ -122,11 +124,14 @@ export default {
     }
 
     .bm-item-list{
-      .common-button.open-mypage{
+      .common-button.nav-link{
         display: block;
         text-align: center;
         margin: 20px 40px 20px 0;
         color: #fff;
+      }
+      .user-navi-link{
+        display: block;
       }
     }
 
