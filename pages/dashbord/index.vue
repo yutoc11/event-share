@@ -4,9 +4,10 @@
     section
       .your-url-wrapper(v-if="!isSetuserData")
         loading-image
-      .your-url-wrapper(v-show="isSetuserData")
+      .your-url-wrapper(v-else-if="isSetuserData")
         .your-url あなたのURL
-        .your-url {{ myUrl }}
+        .your-url(v-if="username || $store.state.userinfo.userName") {{ myUrl }}
+        .your-url(v-else) ※ユーザー名を設定してください※
         .confirm-wrapper(v-show="isSetuserData")
           .confirm-your-url(v-if="username")
             a.underline-link(:href="'https://intro-me.net/'+ username" target="_blank") 自分のページを確認する

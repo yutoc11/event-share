@@ -6,9 +6,7 @@
           nuxt-link.header-logo(to="/")
             img(src="~/assets/images/logo.png")
           .header-menu-list
-            .header-tomypage(v-if="isAuthenticated && username")
-              a.tomypage-button(:href="'https://intro-me.net/'+ username" target="_blank") 公開ページへ
-            .header-tomypage(v-else-if="isAuthenticated && $store.state.userinfo.userName")
+            .header-tomypage(v-if="isAuthenticated && $store.state.userinfo.userName")
               a.tomypage-button(:href="'https://intro-me.net/'+ $store.state.userinfo.userName" target="_blank") 公開ページへ
             .header-tomypage(v-else-if="isAuthenticated && $store.state.userinfo.userId")
               a.tomypage-button(:href="'https://intro-me.net/'+ $store.state.userinfo.userId" target="_blank") 公開ページへ
@@ -53,6 +51,7 @@ export default {
 
   computed:{
     ...mapState(['user']),
+    ...mapState(['userinfo']),
     ...mapGetters(['isAuthenticated']),
   },
 
