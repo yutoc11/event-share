@@ -6,10 +6,12 @@
         h2 SNSやネットショップ<br>イベント情報の<br>まとめが簡単に！
         h3 かんたんリンク作成サービス
       .quick-start-wrapper
-        .quick-start-message ＼さっそくはじめてみる／
+        .quick-start-message ＼Googleアカウントではじめてみる／
         .login-button.align-center(@click="googleLogin")
       .prepare-message
         p 対応リンク先は続々追加予定！
+      .sample-url-wrapper
+        nuxt-link.sample-url(to="/_o_s_a_o_" target="_blank") サンプルをみる
       .public-page-image
         img(src="~assets/images/pubpage-sample.png")
       .attention-message
@@ -126,11 +128,20 @@ export default {
   padding: 14px 0 24px;
 
   .quick-start-message{
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     color: #565656;
     letter-spacing: 1.2px;
   }
 }
+
+.sample-url-wrapper{
+  margin-bottom: 8px;
+  .sample-url{
+    color: #565656;
+    font-size: 0.85rem;
+  }
+}
+
 
 .prepare-message{
   font-size: 0.85rem;
@@ -162,6 +173,7 @@ export default {
       font-weight: bold;
       letter-spacing: 2px;
       line-height: 2.5rem;
+      margin-bottom: 8px;
     }
     h3{
       line-height: 2.5rem;

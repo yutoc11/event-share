@@ -10,7 +10,7 @@
               a.tomypage-button(:href="'https://intro-me.net/'+ $store.state.userinfo.userName" target="_blank") 公開ページへ
             .header-tomypage(v-else-if="isAuthenticated && $store.state.userinfo.userId")
               a.tomypage-button(:href="'https://intro-me.net/'+ $store.state.userinfo.userId" target="_blank") 公開ページへ
-            .header-login(v-else)
+            //.header-login(v-else)
                .login-button(@click="googleLogin")
         .header-line
       section
