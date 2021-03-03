@@ -23,7 +23,7 @@
     "nuxt-clipboard2": "^0.2.1",
     "nuxt-sass-resources-loader": "^2.0.5",
     "nuxt-webfontloader": "^1.1.0",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^8.0.2",
     "vee-validate": "^3.2.2",
